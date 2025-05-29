@@ -49,6 +49,7 @@ test-unit: # Run unit tests @Testing
 
 test-lint: # Lint files @Testing
 	npm run lint
+	poetry run ruff check manage_breast_screening
 
 test-ui: # Run UI tests @Testing
 	poetry run pytest -m system
