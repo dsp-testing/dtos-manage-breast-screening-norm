@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta, timezone
 
 from factory.declarations import LazyAttribute, Sequence, SubFactory
 from factory.django import DjangoModelFactory
@@ -33,9 +33,9 @@ class ClinicFactory(DjangoModelFactory):
     risk_type = FuzzyChoice(models.Clinic.RISK_TYPE_CHOICES)
     state = models.Clinic.State.SCHEDULED
     starts_at = Sequence(
-        lambda n: datetime.datetime(2025, 1, 1, 9) + datetime.timedelta(hours=n)
+        lambda n: datetime(2025, 1, 1, 9, tzinfo=timezone.utc) + timedelta(hours=n)
     )
-    ends_at = LazyAttribute(lambda o: o.starts_at + datetime.timedelta(minutes=30))
+    ends_at = LazyAttribute(lambda o: o.starts_at + timedelta(minutes=30))
     setting = SubFactory(SettingFactory)
 
 
@@ -45,6 +45,6 @@ class ClinicSlotFactory(DjangoModelFactory):
 
     clinic = SubFactory(ClinicFactory)
     starts_at = Sequence(
-        lambda n: datetime.datetime(2025, 1, 1, 9) + datetime.timedelta(hours=n)
+        lambda n: datetime(2025, 1, 1, 9, tzinfo=timezone.utc) + timedelta(hours=n)
     )
     duration_in_minutes = 15
