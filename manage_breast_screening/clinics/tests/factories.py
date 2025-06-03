@@ -5,7 +5,6 @@ from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice
 
 from manage_breast_screening.clinics import models
-from manage_breast_screening.participants.tests.factories import ParticipantFactory
 
 
 class ProviderFactory(DjangoModelFactory):
@@ -49,18 +48,3 @@ class ClinicSlotFactory(DjangoModelFactory):
         lambda n: datetime.datetime(2025, 1, 1, 9) + datetime.timedelta(hours=n)
     )
     duration_in_minutes = 15
-
-
-class ScreeningEpisodeFactory(DjangoModelFactory):
-    class Meta:
-        model = models.ScreeningEpisode
-
-    participant = SubFactory(ParticipantFactory)
-
-
-class AppointmentFactory(DjangoModelFactory):
-    class Meta:
-        model = models.Appointment
-
-    clinic_slot = SubFactory(ClinicSlotFactory)
-    screening_episode = SubFactory(ScreeningEpisodeFactory)

@@ -1,0 +1,61 @@
+{% extends "wizard_step.jinja" %}
+{% from 'card/macro.jinja' import card %}
+{% from 'warning-callout/macro.jinja' import warningCallout %}
+{% from 'components/appointment-status/macro.jinja' import appointment_status %}
+{% from 'components/appointment-header/macro.jinja' import appointment_header %}
+{% from 'components/participant-details/macro.jinja' import participant_details %}
+{% from 'components/secondary-navigation/macro.jinja' import app_secondary_navigation %}
+
+{% block heading %}
+  <div class="app-header-with-status">
+    <h1 class="nhsuk-heading-l">
+      <span class="nhsuk-caption-l">
+        {{ caption }}
+      </span>
+      {{ title }}
+    </h1>
+
+    <div class="app-header-with-status__status-tag">
+      {{ appointment_status(
+        appointment=appointment,
+        csrf_input=csrf_input
+      )}}
+    </div>
+{% endblock %}
+
+{% block step_content %}
+  {{ appointment_header(appointment) }}
+
+  {% if secondary_nav_items %}
+    {{ app_secondary_navigation({
+      "visuallyHiddenTitle": "Secondary menu",
+      "items": secondary_nav_items
+    }) }}
+  {% endif %}
+
+  {% set special_appointment_html %}
+    {% if participant.extra_needs | length > 1 %}
+      <ul>
+        {% for need in participant.extra_needs %}
+          <li>{{need}}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{{ participant.extra_needs | first }}</p>
+    {% endif %}
+    <p><a href="#">Change</a></p>
+  {% endset %}
+
+  {% if participant.extra_needs %}
+    {{ warningCallout({
+      "heading": "Special appointment",
+      "HTML": special_appointment_html
+    }) }}
+  {% endif %}
+
+  {{ card({
+    "headingHtml": " ",
+    "headingLevel": "2",
+    "descriptionHtml": participant_details(participant=appointment.participant, last_known_screening=appointment.last_known_screening)
+  }) }}
+{% endblock %}

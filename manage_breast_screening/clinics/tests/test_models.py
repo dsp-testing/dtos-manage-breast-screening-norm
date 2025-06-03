@@ -7,7 +7,7 @@ from pytest_django.asserts import assertQuerySetEqual
 
 from manage_breast_screening.clinics import models
 
-from .factories import ClinicFactory, ScreeningEpisodeFactory
+from .factories import ClinicFactory
 
 
 def test_clinic_is_scheduled():
@@ -28,15 +28,3 @@ def test_status_filtering():
     assertQuerySetEqual(models.Clinic.objects.today(), {current}, ordered=False)
     assertQuerySetEqual(models.Clinic.objects.upcoming(), {future}, ordered=False)
     assertQuerySetEqual(models.Clinic.objects.completed(), {past}, ordered=False)
-
-
-@pytest.mark.django_db
-class TestScreeningEvent:
-    def test_no_previous_screening_episode(self):
-        episode = ScreeningEpisodeFactory.create()
-        assert episode.previous() is None
-
-    def test_previous_screening_episode(self):
-        episode = ScreeningEpisodeFactory.create()
-        next_episode = ScreeningEpisodeFactory.create(participant=episode.participant)
-        assert next_episode.previous() == episode

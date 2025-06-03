@@ -85,3 +85,62 @@ class ParticipantAddress(models.Model):
     )
     lines = ArrayField(models.CharField(), size=5, blank=True)
     postcode = models.CharField(blank=True, null=True)
+
+
+class ScreeningEpisode(BaseModel):
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+
+    def screening_history(self):
+        """
+        Return all previous screening episodes, excluding this one, prefetching
+        their appointment details as well.
+        """
+        return (
+            ScreeningEpisode.objects.prefetch_related(
+                "appointment_set__clinic_slot__clinic__setting__provider"
+            )
+            .filter(participant__pk=self.participant.pk)
+            .exclude(pk=self.pk)
+            .order_by("-created_at")
+        )
+
+    def previous(self) -> "ScreeningEpisode | None":
+        """
+        Return the last known screening episode
+        """
+        try:
+            return self.screening_history()[0]
+        except IndexError:
+            return None
+
+
+class Appointment(BaseModel):
+    class Status:
+        CONFIRMED = "CONFIRMED"
+        CANCELLED = "CANCELLED"
+        DID_NOT_ATTEND = "DID_NOT_ATTEND"
+        CHECKED_IN = "CHECKED_IN"
+        SCREENED = "SCREENED"
+        PARTIALLY_SCREENED = "PARTIALLY_SCREENED"
+        ATTENDED_NOT_SCREENED = "ATTENDED_NOT_SCREENED"
+
+    STATUS_CHOICES = {
+        Status.CONFIRMED: "Confirmed",
+        Status.CANCELLED: "Cancelled",
+        Status.DID_NOT_ATTEND: "Did not attend",
+        Status.CHECKED_IN: "Checked in",
+        Status.SCREENED: "Screened",
+        Status.PARTIALLY_SCREENED: "Partially screened",
+        Status.ATTENDED_NOT_SCREENED: "Attended not screened",
+    }
+
+    screening_episode = models.ForeignKey(ScreeningEpisode, on_delete=models.CASCADE)
+    clinic_slot = models.ForeignKey(
+        "clinics.ClinicSlot",
+        on_delete=models.CASCADE,
+    )
+    status = models.CharField(
+        choices=STATUS_CHOICES, max_length=50, default=Status.CONFIRMED
+    )
+    reinvite = models.BooleanField(default=False)
+    stopped_reasons = models.JSONField(null=True, blank=True)

@@ -1,0 +1,79 @@
+{% extends 'layout-app.html' %}
+
+{% from 'tag/macro.jinja' import tag %}
+{% from 'components/count/macro.jinja' import appCount %}
+{% from 'components/secondary-navigation/macro.jinja' import app_secondary_navigation %}
+
+{% block content %}
+<h1>{{ presenter.heading }}</h1>
+
+{% set ns = namespace() %}
+{% set ns.secondaryNavItems = [] %}
+
+{% for item in [
+  { "id": 'today', "label": 'Today' },
+  { "id": 'upcoming', "label": 'Upcoming' },
+  { "id": 'completed', "label": 'Completed' },
+  { "id": 'all', "label": 'All' }
+] %}
+{% set href %}/clinics/{{ item.id }}{% endset %}
+{% set ns.secondaryNavItems = ns.secondaryNavItems + [{
+  "text": (item.label + " " + appCount(presenter.counts_by_filter[item.id])) | safe,
+  "href": href | trim,
+  "current": true if item.id == presenter.filter
+}] %}
+{% endfor %}
+
+{{ app_secondary_navigation({
+  "visuallyHiddenTitle": "Secondary menu",
+  "items": ns.secondaryNavItems
+}) }}
+
+{% if presenter.clinics | length == 0 %}
+<p>No clinics found.</p>
+{% else %}
+<table class="nhsuk-table">
+  <thead class="nhsuk-table__head">
+    <tr>
+      <th scope="col">Location</th>
+      <th scope="col">Date and time</th>
+      <th scope="col">Clinic type</th>
+      <th scope="col" class="nhsuk-table__cell--numeric">Participants</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody class="nhsuk-table__body">
+    {% for clinic in presenter.clinics %}
+    <tr>
+      <td>
+        <a href="/clinics/{{ clinic.id }}" class="nhsuk-link">
+          {{ clinic.location_name }}
+          <br>
+          ({{ clinic.session_type }})
+        </a>
+      </td>
+      <td>{{ clinic.starts_at | no_wrap }}<br>
+        {{clinic.time_range | as_hint }}
+      </td>
+      <td>
+        {{ clinic.type }}
+        <br>
+        <span class="app-text-grey">{{ clinic.risk_type }}</span>
+      </td>
+
+      <td class="nhsuk-table__cell--numeric">
+        {{ clinic.number_of_slots }}
+      </td>
+      <td>
+        {{ tag({
+          "html": clinic.state.text | no_wrap,
+          "classes": clinic.state.classes
+        })}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endif %}
+{% endblock %}

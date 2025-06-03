@@ -1,0 +1,132 @@
+from datetime import date, datetime
+from datetime import timezone as tz
+from unittest.mock import MagicMock
+
+import pytest
+import time_machine
+
+from manage_breast_screening.clinics.models import ClinicSlot
+from manage_breast_screening.participants.models import (
+    Appointment,
+    Participant,
+    ScreeningEpisode,
+)
+
+from ..presenters import AppointmentPresenter, ClinicSlotPresenter, ParticipantPresenter
+
+
+class TestAppointmentPresenter:
+    @pytest.fixture
+    def mock_appointment(self):
+        mock = MagicMock(spec=Appointment)
+        mock.screening_episode.participant.nhs_number = "99900900829"
+        return mock
+
+    @pytest.mark.parametrize(
+        "status, expected_classes, expected_text, expected_key, expected_is_confirmed",
+        [
+            (
+                Appointment.Status.CONFIRMED,
+                "nhsuk-tag--blue app-nowrap",
+                "Confirmed",
+                "CONFIRMED",
+                True,
+            ),
+            (
+                Appointment.Status.CHECKED_IN,
+                "app-nowrap",
+                "Checked in",
+                "CHECKED_IN",
+                False,
+            ),
+            (
+                Appointment.Status.ATTENDED_NOT_SCREENED,
+                "nhsuk-tag--orange app-nowrap",
+                "Attended not screened",
+                "ATTENDED_NOT_SCREENED",
+                False,
+            ),
+        ],
+    )
+    def test_status(
+        self,
+        mock_appointment,
+        status,
+        expected_classes,
+        expected_text,
+        expected_key,
+        expected_is_confirmed,
+    ):
+        mock_appointment.status = status
+        mock_appointment.get_status_display.return_value = Appointment.STATUS_CHOICES[
+            status
+        ]
+
+        result = AppointmentPresenter(mock_appointment).status
+
+        assert result["classes"] == expected_classes
+        assert result["text"] == expected_text
+        assert result["key"] == expected_key
+        assert result["is_confirmed"] == expected_is_confirmed
+
+    @time_machine.travel(datetime(2025, 1, 1, tzinfo=tz.utc))
+    def test_last_known_screening(self, mock_appointment):
+        mock_screening = MagicMock(spec=ScreeningEpisode)
+        mock_screening.created_at = datetime(2015, 1, 1)
+        mock_appointment.screening_episode.previous.return_value = mock_screening
+
+        result = AppointmentPresenter(mock_appointment)
+
+        assert result.last_known_screening == {
+            "date": "1 January 2015",
+            "relative_date": "10 years ago",
+            "location": None,
+            "type": None,
+        }
+
+
+class TestClinicSlotPresenter:
+    @pytest.fixture
+    def clinic_slot_mock(self):
+        mock = MagicMock(spec=ClinicSlot)
+        return mock
+
+    def test_clinic_type(self, clinic_slot_mock):
+        clinic_slot_mock.clinic.get_type_display.return_value = "Screening"
+
+        assert ClinicSlotPresenter(clinic_slot_mock).clinic_type == "Screening"
+
+    @time_machine.travel(datetime(2025, 5, 19, tzinfo=tz.utc))
+    def test_slot_time_and_clinic_date(self, clinic_slot_mock):
+        clinic_slot_mock.starts_at = datetime(2025, 1, 2, 9, 30)
+        clinic_slot_mock.duration_in_minutes = 30
+        clinic_slot_mock.clinic.starts_at = date(2025, 1, 2)
+
+        assert (
+            ClinicSlotPresenter(clinic_slot_mock).slot_time_and_clinic_date
+            == "9:30am (30 minutes) - 2 January 2025 (4 months, 17 days ago)"
+        )
+
+
+class TestParticipantPresenter:
+    @pytest.fixture
+    def mock_participant(self):
+        mock = MagicMock(spec=Participant)
+        mock.nhs_number = "99900900829"
+        return mock
+
+    @pytest.mark.parametrize(
+        "category, formatted",
+        [
+            (
+                "Black, African, Caribbean or Black British",
+                "Black, African, Caribbean or Black British",
+            ),
+            (None, None),
+            ("Any other", "any other"),
+        ],
+    )
+    def test_ethnic_group_category(self, mock_participant, category, formatted):
+        mock_participant.ethnic_group_category.return_value = category
+        result = ParticipantPresenter(mock_participant)
+        assert result.ethnic_group_category == formatted

@@ -1,0 +1,107 @@
+{% from 'summary-list/macro.jinja' import summaryList %}
+
+{% set dob %}
+  {{ participant.date_of_birth }}<br>
+  <span class="nhsuk-hint">({{ participant.age }})</span>
+{% endset %}
+
+{% set ethnic_group = participant.ethnic_group  %}
+{% set ethnic_group_category = participant.ethnic_group_category %}
+{% set ethnicity_details_link %}
+  <a href="#" class="nhsuk-link">Enter ethnicity details</a>
+{% endset %}
+
+{% set ethnicity_html %}
+  {% if ethnic_group == "Prefer not to say" %}
+    {{ ethnic_group }}
+  {% elif ethnic_group %}
+    {{ ethnic_group_category }} ({{ ethnic_group }})
+  {% else %}
+    {{ ethnicity_details_link | safe }}
+  {% endif %}
+{% endset %}
+
+{% set address_html %}
+  {% if participant.address %}
+    {% for line in participant.address.lines %}
+      {{ line }}<br>
+    {% endfor %}
+    {{ address.postcode }}
+  {% endif %}
+{% endset %}
+{% set address_html = address_html | trim | default("Not provided") %}
+
+{% set last_known_screening = appointment.last_known_screening %}
+{% set last_mammogram_html %}
+  {% if last_known_screening %}
+    {{ last_known_screening.date }} ({{ last_known_screening.relative_date | as_hint }})
+    {% if last_known_screening.location %}
+      </br>{{ last_known_screening.location }}
+      {% if last_known_screening.type %}</br>{{ last_known_screening.type }}{% endif %}
+    {% endif %}
+  {% else %}
+  {{ "Not known" | as_hint }}
+  {% endif %}
+{% endset %}
+
+{{ summaryList({
+  "rows": [
+   {
+     "key": {
+       "text": "Full name"
+     },
+     "value": {
+       "text": participant.full_name
+     }
+   },
+   {
+     "key": {
+       "text": "Date of birth"
+     },
+     "value": {
+       "html": dob
+     }
+   },
+   {
+     "key": {
+       "text": "Ethnicity"
+     },
+     "value": {
+       "html": ethnicity_html | safe
+     }
+   },
+   {
+     "key": {
+       "text": "Address"
+     },
+     "value": {
+       "html": address_html
+     }
+   },
+   {
+     "key": {
+       "text": "Last known mammogram"
+     },
+     "value": {
+       "html": last_mammogram_html
+     },
+     "actions": {
+        "items": [
+          {
+            "href": "#",
+            "text": "View or change",
+            "visuallyHiddenText": "email"
+          }
+        ]
+      }
+   },
+   {
+     "key": {
+       "text": "Risk level"
+     },
+     "value": {
+       "html": participant.risk_level
+     }
+   }
+  ]
+}) }}

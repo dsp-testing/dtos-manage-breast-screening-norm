@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "manage_breast_screening.clinics",
     "manage_breast_screening.participants",
-    "manage_breast_screening.record_a_mammogram",
+    "manage_breast_screening.mammograms",
 ]
 
 MIDDLEWARE = [
@@ -78,7 +78,7 @@ ROOT_URLCONF = "manage_breast_screening.config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.jinja2.Jinja2",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "jinja2"],
         "APP_DIRS": True,
         "OPTIONS": {
             "environment": "manage_breast_screening.config.jinja2_env.environment",
