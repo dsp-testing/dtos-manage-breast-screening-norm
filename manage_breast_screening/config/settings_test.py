@@ -1,3 +1,5 @@
+# ruff: noqa: F403, F405
+
 from .settings import *
 
 SECRET_KEY = "testing"
