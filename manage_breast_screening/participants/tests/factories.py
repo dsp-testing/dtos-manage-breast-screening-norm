@@ -32,3 +32,17 @@ class ParticipantAddressFactory(DjangoModelFactory):
 
     class Meta:
         model = models.ParticipantAddress
+
+
+class ScreeningEpisodeFactory(DjangoModelFactory):
+    class Meta:
+        model = models.ScreeningEpisode
+
+    participant = SubFactory(ParticipantFactory)
+
+
+class AppointmentFactory(DjangoModelFactory):
+    class Meta:
+        model = models.Appointment
+
+    screening_episode = SubFactory(ScreeningEpisodeFactory)
