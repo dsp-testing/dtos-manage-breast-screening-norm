@@ -4,13 +4,13 @@ import pytest
 from django.urls import reverse
 from playwright.sync_api import expect
 
-from manage_breast_screening.clinics.models import Appointment
-from manage_breast_screening.clinics.tests.factories import (
+from manage_breast_screening.config.system_test_setup import SystemTestCase
+from manage_breast_screening.participants.models import Appointment
+from manage_breast_screening.participants.tests.factories import (
     AppointmentFactory,
+    ParticipantFactory,
     ScreeningEpisodeFactory,
 )
-from manage_breast_screening.config.system_test_setup import SystemTestCase
-from manage_breast_screening.participants.tests.factories import ParticipantFactory
 
 
 class TestUserSubmitsCannotGoAheadForm(SystemTestCase):

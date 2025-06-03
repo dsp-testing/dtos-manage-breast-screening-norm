@@ -1,7 +1,8 @@
-from pytest_django.asserts import assertFormError
 import pytest
+from pytest_django.asserts import assertFormError
 
-from manage_breast_screening.clinics.tests.factories import AppointmentFactory
+from manage_breast_screening.participants.tests.factories import AppointmentFactory
+
 from ..forms import AppointmentCannotGoAheadForm, ScreeningAppointmentForm
 
 
@@ -10,9 +11,12 @@ class TestScreeningAppointmentForm:
         form = ScreeningAppointmentForm({})
         assertFormError(form, "decision", ["This field is required."])
 
+
 @pytest.mark.django_db
 class TestAppointmentCannotGoAheadForm:
-    @pytest.mark.parametrize("decision,reinvite_value", [("True", True), ("False", False)])
+    @pytest.mark.parametrize(
+        "decision,reinvite_value", [("True", True), ("False", False)]
+    )
     def test_reinvite_reflects_form_data(self, decision, reinvite_value):
         appointment = AppointmentFactory()
         assert appointment.reinvite == False

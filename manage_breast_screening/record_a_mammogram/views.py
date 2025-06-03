@@ -5,10 +5,8 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.views.generic import FormView
 
-from manage_breast_screening.clinics.models import Appointment
-from manage_breast_screening.participants.models import Participant
+from manage_breast_screening.participants.models import Appointment, Participant
 
-from ..clinics.models import Appointment
 from .forms import (
     AppointmentCannotGoAheadForm,
     AskForMedicalInformationForm,
@@ -157,7 +155,9 @@ class RecordMedicalInformation(BaseAppointmentForm):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         id = self.kwargs["id"]
-        participant = get_object_or_404(Participant, screeningepisode__appointment__id=id)
+        participant = get_object_or_404(
+            Participant, screeningepisode__appointment__id=id
+        )
         context.update(
             {
                 "title": "Record medical information",

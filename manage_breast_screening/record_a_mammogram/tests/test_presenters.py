@@ -5,13 +5,12 @@ from unittest.mock import MagicMock
 import pytest
 import time_machine
 
-from manage_breast_screening.clinics.models import (
+from manage_breast_screening.clinics.models import ClinicSlot
+from manage_breast_screening.participants.models import (
     Appointment,
-    ClinicSlot,
+    Participant,
     ScreeningEpisode,
 )
-from manage_breast_screening.clinics.tests.factories import AppointmentFactory
-from manage_breast_screening.participants.models import Participant
 
 from ..presenters import AppointmentPresenter, ClinicSlotPresenter, ParticipantPresenter
 

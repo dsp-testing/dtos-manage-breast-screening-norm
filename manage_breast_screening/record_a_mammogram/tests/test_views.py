@@ -2,7 +2,7 @@ import pytest
 from django.urls import reverse
 from pytest_django.asserts import assertContains, assertRedirects
 
-from manage_breast_screening.clinics.tests.factories import AppointmentFactory
+from manage_breast_screening.participants.tests.factories import AppointmentFactory
 
 
 @pytest.fixture

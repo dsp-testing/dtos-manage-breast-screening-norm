@@ -135,5 +135,114 @@
       "lines": "[\"81 York lines\", \"Worthing\"]",
       "postcode": "BN11 0YE"
     }
+  },
+  {
+    "model": "participants.screeningepisode",
+    "pk": "1c0009ed-8cee-422b-965d-4934b77c5294",
+    "fields": {
+      "created_at": "2022-04-25T11:15:00Z",
+      "updated_at": "2025-04-25T11:15:00Z",
+      "participant": "913bb98a-c31f-4c2b-9b81-73a8eb994c20"
+    }
+  },
+  {
+    "model": "participants.screeningepisode",
+    "pk": "3888ca4a-2b6c-43a3-bde2-4a92649c6648",
+    "fields": {
+      "created_at": "2025-04-25T11:15:00Z",
+      "updated_at": "2025-04-25T11:15:00Z",
+      "participant": "6ffdc8dd-8f78-4fda-82a1-890f20eda7fd"
+    }
+  },
+  {
+    "model": "participants.screeningepisode",
+    "pk": "64cf6722-19f2-4519-89a3-cb127447c72a",
+    "fields": {
+      "created_at": "2025-04-25T11:15:00Z",
+      "updated_at": "2025-04-25T11:15:00Z",
+      "participant": "7c9d087a-63ce-4459-a3bf-8379837eb35d"
+    }
+  },
+  {
+    "model": "participants.screeningepisode",
+    "pk": "519593ee-6e44-41db-962a-862a09f807ad",
+    "fields": {
+      "created_at": "2025-04-25T11:15:00Z",
+      "updated_at": "2025-04-25T11:15:00Z",
+      "participant": "6f947d99-3f1f-42f4-b21c-ad7987c05d6d"
+    }
+  },
+  {
+    "model": "participants.screeningepisode",
+    "pk": "522fe2cb-1c41-40d5-a65d-c36695bf11b5",
+    "fields": {
+      "created_at": "2025-04-25T11:15:00Z",
+      "updated_at": "2025-04-25T11:15:00Z",
+      "participant": "2b87d44f-637b-44a7-9dfd-1e57f37d04ea"
+    }
+  },
+  {
+    "model": "participants.screeningepisode",
+    "pk": "ccad34c1-8e26-4c9e-a134-a0de8f997d89",
+    "fields": {
+      "created_at": "2025-04-25T11:15:00Z",
+      "updated_at": "2025-04-25T11:15:00Z",
+      "participant": "913bb98a-c31f-4c2b-9b81-73a8eb994c20"
+    }
+  },
+  {
+    "model": "participants.appointment",
+    "pk": "e7be35a3-8b7f-4522-9e9b-7b8e6829c1b8",
+    "fields": {
+      "created_at": "2025-04-25T11:20:00Z",
+      "updated_at": "2025-04-25T11:20:00Z",
+      "screening_episode": 6,
+      "clinic_slot": "d1df208b-955a-4b2f-a908-2728aea6b29f",
+      "status": "CONFIRMED"
+    }
+  },
+  {
+    "model": "participants.appointment",
+    "pk": "522fe2cb-1c41-40d5-a65d-c36695bf11b5",
+    "fields": {
+      "created_at": "2025-04-25T11:20:00Z",
+      "updated_at": "2025-04-25T11:20:00Z",
+      "screening_episode": "1c0009ed-8cee-422b-965d-4934b77c5294",
+      "clinic_slot": "cc428100-3397-4263-b863-cee4326212b7",
+      "status": "CHECKED_IN"
+    }
+  },
+  {
+    "model": "participants.appointment",
+    "pk": "ccad34c1-8e26-4c9e-a134-a0de8f997d89",
+    "fields": {
+      "created_at": "2025-04-25T11:20:00Z",
+      "updated_at": "2025-04-25T11:20:00Z",
+      "screening_episode": "3888ca4a-2b6c-43a3-bde2-4a92649c6648",
+      "clinic_slot": "f657f049-a52f-4a23-ada4-834ea557336c",
+      "status": "SCREENED"
+    }
+  },
+  {
+    "model": "participants.appointment",
+    "pk": "a3ad3cb1-d67a-499c-805c-845455deb60f",
+    "fields": {
+      "created_at": "2025-04-25T11:20:00Z",
+      "updated_at": "2025-04-25T11:20:00Z",
+      "screening_episode": "64cf6722-19f2-4519-89a3-cb127447c72a",
+      "clinic_slot": "48bc626c-e8b1-44e7-a747-915c65fc2360",
+      "status": "DID_NOT_ATTEND"
+    }
+  },
+  {
+    "model": "participants.appointment",
+    "pk": "e7be35a3-8b7f-4522-9e9b-7b8e6829c1b8",
+    "fields": {
+      "created_at": "2025-04-25T11:20:00Z",
+      "updated_at": "2025-04-25T11:20:00Z",
+      "screening_episode": "519593ee-6e44-41db-962a-862a09f807ad",
+      "clinic_slot": "1c0009ed-8cee-422b-965d-4934b77c5294",
+      "status": "CANCELLED"
+    }
   }
 ]

@@ -4,6 +4,8 @@ from factory.declarations import SubFactory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice
 
+from manage_breast_screening.clinics.tests.factories import ClinicSlotFactory
+
 from .. import models
 
 
@@ -45,4 +47,5 @@ class AppointmentFactory(DjangoModelFactory):
     class Meta:
         model = models.Appointment
 
+    clinic_slot = SubFactory(ClinicSlotFactory)
     screening_episode = SubFactory(ScreeningEpisodeFactory)

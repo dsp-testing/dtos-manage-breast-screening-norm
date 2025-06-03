@@ -88,9 +88,7 @@ class ParticipantAddress(models.Model):
 
 
 class ScreeningEpisode(BaseModel):
-    participant = models.ForeignKey(
-        Participant, on_delete=models.CASCADE, related_name="screening_episode_new"
-    )
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
 
     def screening_history(self):
         """
@@ -101,8 +99,9 @@ class ScreeningEpisode(BaseModel):
             ScreeningEpisode.objects.prefetch_related(
                 "appointment_set__clinic_slot__clinic__setting__provider"
             )
-            .filter(participant__pk=self.participant.pk, pk__lt=self.pk)
-            .order_by("-pk")
+            .filter(participant__pk=self.participant.pk)
+            .exclude(pk=self.pk)
+            .order_by("-created_at")
         )
 
     def previous(self) -> "ScreeningEpisode | None":
@@ -136,7 +135,10 @@ class Appointment(BaseModel):
     }
 
     screening_episode = models.ForeignKey(ScreeningEpisode, on_delete=models.CASCADE)
-    clinic_slot = models.ForeignKey("clinics.ClinicSlot", on_delete=models.CASCADE)
+    clinic_slot = models.ForeignKey(
+        "clinics.ClinicSlot",
+        on_delete=models.CASCADE,
+    )
     status = models.CharField(
         choices=STATUS_CHOICES, max_length=50, default=Status.CONFIRMED
     )

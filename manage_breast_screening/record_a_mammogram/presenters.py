@@ -1,8 +1,6 @@
-import re
-
 from django.urls import reverse
 
-from ..clinics.models import Appointment
+from ..participants.models import Appointment
 from ..participants.presenters import ParticipantPresenter
 from ..utils.date_formatting import format_date, format_relative_date, format_time
 
