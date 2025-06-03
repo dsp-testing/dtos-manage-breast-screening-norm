@@ -18,6 +18,6 @@ def clinic_list(request, filter="today"):
 
     return render(
         request,
-        "clinics/index.html",
+        "index.html",
         context={"presenter": presenter},
     )

@@ -78,7 +78,7 @@ ROOT_URLCONF = "manage_breast_screening.config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.jinja2.Jinja2",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "jinja2"],
         "APP_DIRS": True,
         "OPTIONS": {
             "environment": "manage_breast_screening.config.jinja2_env.environment",
