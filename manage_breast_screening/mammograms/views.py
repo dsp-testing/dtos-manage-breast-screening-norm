@@ -56,7 +56,7 @@ class BaseAppointmentForm(FormView):
 
 
 class StartScreening(BaseAppointmentForm):
-    template_name = "record_a_mammogram/start_screening.jinja"
+    template_name = "mammograms/start_screening.jinja"
     form_class = ScreeningAppointmentForm
 
     def get_context_data(self, **kwargs):
@@ -88,18 +88,18 @@ class StartScreening(BaseAppointmentForm):
 
         if form.cleaned_data["decision"] == "continue":
             return redirect(
-                "record_a_mammogram:ask_for_medical_information",
+                "mammograms:ask_for_medical_information",
                 id=self.get_appointment().pk,
             )
         else:
             return redirect(
-                "record_a_mammogram:appointment_cannot_go_ahead",
+                "mammograms:appointment_cannot_go_ahead",
                 id=self.get_appointment().pk,
             )
 
 
 class AskForMedicalInformation(BaseAppointmentForm):
-    template_name = "record_a_mammogram/ask_for_medical_information.jinja"
+    template_name = "mammograms/ask_for_medical_information.jinja"
     form_class = AskForMedicalInformationForm
 
     def get_context_data(self, **kwargs):
@@ -125,7 +125,7 @@ class AskForMedicalInformation(BaseAppointmentForm):
                 "decision_legend": "Has the participant shared any relevant medical information?",
                 "cannot_continue_link": {
                     "href": reverse(
-                        "record_a_mammogram:appointment_cannot_go_ahead",
+                        "mammograms:appointment_cannot_go_ahead",
                         kwargs={"id": id},
                     ),
                     "text": APPOINTMENT_CANNOT_PROCEED,
@@ -141,15 +141,13 @@ class AskForMedicalInformation(BaseAppointmentForm):
         appointment = self.get_appointment()
 
         if form.cleaned_data["decision"] == "yes":
-            return redirect(
-                "record_a_mammogram:record_medical_information", id=appointment.pk
-            )
+            return redirect("mammograms:record_medical_information", id=appointment.pk)
         else:
-            return redirect("record_a_mammogram:awaiting_images", id=appointment.pk)
+            return redirect("mammograms:awaiting_images", id=appointment.pk)
 
 
 class RecordMedicalInformation(BaseAppointmentForm):
-    template_name = "record_a_mammogram/record_medical_information.jinja"
+    template_name = "mammograms/record_medical_information.jinja"
     form_class = RecordMedicalInformationForm
 
     def get_context_data(self, **kwargs):
@@ -174,11 +172,9 @@ class RecordMedicalInformation(BaseAppointmentForm):
         appointment = self.get_appointment()
 
         if form.cleaned_data["decision"] == "continue":
-            return redirect("record_a_mammogram:awaiting_images", id=appointment.pk)
+            return redirect("mammograms:awaiting_images", id=appointment.pk)
         else:
-            return redirect(
-                "record_a_mammogram:appointment_cannot_go_ahead", id=appointment.pk
-            )
+            return redirect("mammograms:appointment_cannot_go_ahead", id=appointment.pk)
 
 
 def appointment_cannot_go_ahead(request, id):
@@ -195,7 +191,7 @@ def appointment_cannot_go_ahead(request, id):
 
     return render(
         request,
-        "record_a_mammogram/appointment_cannot_go_ahead.jinja",
+        "mammograms/appointment_cannot_go_ahead.jinja",
         {
             "title": "Appointment cannot go ahead",
             "caption": participant.full_name,
@@ -208,7 +204,7 @@ def appointment_cannot_go_ahead(request, id):
 def awaiting_images(request, id):
     return render(
         request,
-        "record_a_mammogram/awaiting_images.jinja",
+        "mammograms/awaiting_images.jinja",
         {"title": "Awaiting images"},
     )
 
@@ -219,4 +215,4 @@ def check_in(request, id):
     appointment.status = Appointment.Status.CHECKED_IN
     appointment.save()
 
-    return redirect("record_a_mammogram:start_screening", id=id)
+    return redirect("mammograms:start_screening", id=id)

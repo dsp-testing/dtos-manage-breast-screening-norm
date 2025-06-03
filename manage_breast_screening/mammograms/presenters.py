@@ -32,7 +32,7 @@ def present_secondary_nav(id):
         {
             "id": "all",
             "text": "Appointment details",
-            "href": reverse("record_a_mammogram:start_screening", kwargs={"id": id}),
+            "href": reverse("mammograms:start_screening", kwargs={"id": id}),
             "current": True,
         },
         {"id": "medical_information", "text": "Medical information", "href": "#"},

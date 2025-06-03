@@ -27,10 +27,10 @@ urlpatterns = [
         "clinics/", include("manage_breast_screening.clinics.urls", namespace="clinics")
     ),
     path(
-        "record-a-mammogram/",
+        "mammograms/",
         include(
-            "manage_breast_screening.record_a_mammogram.urls",
-            namespace="record_a_mammogram",
+            "manage_breast_screening.mammograms.urls",
+            namespace="mammograms",
         ),
     ),
     path("", RedirectView.as_view(pattern_name="clinics:index")),

@@ -72,7 +72,7 @@ class TestRecordingAMammogram(SystemTestCase):
         self.page.goto(
             self.live_server_url
             + reverse(
-                "record_a_mammogram:start_screening",
+                "mammograms:start_screening",
                 kwargs={"id": self.appointment.pk},
             )
         )
@@ -96,14 +96,14 @@ class TestRecordingAMammogram(SystemTestCase):
 
     def then_i_should_be_on_the_medical_information_page(self):
         path = reverse(
-            "record_a_mammogram:ask_for_medical_information",
+            "mammograms:ask_for_medical_information",
             kwargs={"id": self.appointment.pk},
         )
         expect(self.page).to_have_url(re.compile(path))
 
     def then_i_should_be_on_the_record_medical_information_page(self):
         path = reverse(
-            "record_a_mammogram:record_medical_information",
+            "mammograms:record_medical_information",
             kwargs={"id": self.appointment.pk},
         )
         expect(self.page).to_have_url(re.compile(path))
@@ -131,7 +131,7 @@ class TestRecordingAMammogram(SystemTestCase):
 
     def then_the_screen_should_show_that_it_is_awaiting_images_from_the_PACS(self):
         path = reverse(
-            "record_a_mammogram:awaiting_images",
+            "mammograms:awaiting_images",
             kwargs={"id": self.appointment.pk},
         )
         expect(self.page).to_have_url(re.compile(path))

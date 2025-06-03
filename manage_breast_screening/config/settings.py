@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "manage_breast_screening.clinics",
     "manage_breast_screening.participants",
-    "manage_breast_screening.record_a_mammogram",
+    "manage_breast_screening.mammograms",
 ]
 
 MIDDLEWARE = [
