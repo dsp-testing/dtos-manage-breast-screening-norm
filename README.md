@@ -107,7 +107,7 @@ To generate a new app, run:
 poetry run ./manage.py startapp <app_name> manage_breast_screening/`
 ```
 
-## Deployment
+## Manual deployment
 The build pipeline builds and pushes a docker image to [Github container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). The app is deployed to an [Azure container app](https://azure.microsoft.com/en-us/products/container-apps) using terraform.
 
 For each environment, e.g. 'dev':
@@ -126,6 +126,11 @@ For each environment, e.g. 'dev':
    make dev terraform-plan DOCKER_IMAGE_TAG=git-sha-af32637e7e6a07e36158dcb8d7ed90be49be1xyz
    ```
 1. The web app URL will be displayed as output. Copy it into a browser on the AVD to access the app.
+
+## Continuous deployment
+When a PR is merged, Github actions securely triggers the deployment pipeline on the Azure devops pool running on the internal network. It currently deploys the dev environment automatically.
+
+Access [Azure devops](https://dev.azure.com/nhse-dtos/dtos-manage-breast-screening/_build?definitionId=86) to see the pipeline.
 
 ## Application secrets
 The app requires secrets provided as environment variables. Terraform creates an Azure key vault and all its secrets are mapped directly to the app as environment variables. Devs can access the key vault to create and update the secrets manually.
