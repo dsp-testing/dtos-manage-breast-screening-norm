@@ -104,16 +104,6 @@ class AskForMedicalInformation(BaseAppointmentForm):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(
-            {
-                "title": "Medical information",
-                "decision_legend": "Has the participant shared any relevant medical information?",
-            }
-        )
-        return context
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         id = self.kwargs["id"]
         participant = Participant.objects.get(screeningepisode__appointment__id=id)
 
