@@ -13,7 +13,7 @@ ci: # Skip manual approvals when running in CI - make ci <env> <action>
 set-azure-account: # Set the Azure account for the environment - make <env> set-azure-account
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
 
-resource-group-init: get-subscription-ids # Initialise the resource group - make <env> resource-group-init
+resource-group-init: set-azure-account get-subscription-ids # Initialise the resource group - make <env> resource-group-init
 	$(eval STORAGE_ACCOUNT_NAME=sa${APP_SHORT_NAME}${ENV_CONFIG}tfstate)
 
 	$(eval output='$(shell az deployment sub create --location "${REGION}" --template-file infrastructure/terraform/resource_group_init/main.bicep \
