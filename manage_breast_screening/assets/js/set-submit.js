@@ -53,7 +53,7 @@ export default ($form, options = {}) => {
     if (options.onSuccess) {
       try {
         options.onSuccess.apply($form, [response])
-      } catch (e) {
+      } catch (_) {
         console.warn(
           'setSubmit: the form was submitted successfully, but the onSuccess handler threw an exception.'
         )
