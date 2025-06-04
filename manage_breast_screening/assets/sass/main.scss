@@ -26,3 +26,10 @@ h3 {
 [hidden] {
   display: none;
 }
+
+/*
+Highlight in red links that don't get anywhere yet
+*/
+a[href="#"] {
+  color: #c80000;
+}
