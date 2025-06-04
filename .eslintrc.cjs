@@ -114,7 +114,21 @@ module.exports = {
         'no-else-return': 'error',
 
         // Avoid hard to read multi assign statements
-        'no-multi-assign': 'error'
+        'no-multi-assign': 'error',
+
+        // Allow unused variables to be prefixed with an underscore
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            args: 'all',
+            argsIgnorePattern: '^_',
+            caughtErrors: 'all',
+            caughtErrorsIgnorePattern: '^_',
+            destructuredArrayIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+            ignoreRestSiblings: true
+          }
+        ]
       },
       settings: {
         jsdoc: {
