@@ -22,6 +22,16 @@ resource contributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
   }
 }
 
+// Let the managed identity read key vault secrets during terraform plan
+resource kvSecretUserAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().subscriptionId, miPrincipalId, 'kvSecretUser')
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleID.kvSecretUser)
+    principalId: miPrincipalId
+    description: '${miName} kvSecretUser access to subscription'
+  }
+}
+
 // Let the managed identity assign the Key Vault Secrets User role to the container app managed identity
 resource rbacAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(subscription().subscriptionId, miPrincipalId, 'rbacAdmin')
