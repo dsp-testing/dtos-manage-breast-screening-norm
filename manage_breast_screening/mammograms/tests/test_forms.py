@@ -19,7 +19,7 @@ class TestAppointmentCannotGoAheadForm:
     )
     def test_reinvite_reflects_form_data(self, decision, reinvite_value):
         appointment = AppointmentFactory()
-        assert appointment.reinvite == False
+        assert not appointment.reinvite
 
         form_data = {
             "stopped_reasons": ["failed_identity_check"],

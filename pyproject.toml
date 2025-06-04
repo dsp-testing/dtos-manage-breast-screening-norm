@@ -28,6 +28,7 @@ time-machine = "^2.16.0"
 pytest-playwright = "^0.7.0"
 ipdb = "^0.13.13"
 axe-playwright-python = "^0.1.4"
+ruff = "^0.11.11"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -39,3 +40,6 @@ DJANGO_SETTINGS_MODULE = "manage_breast_screening.config.settings_test"
 python_files = "tests.py test_*.py *_tests.py"
 addopts = "--doctest-modules"
 markers = ["system: mark a test as a system test"]
+
+[tool.ruff]
+exclude = ["*/migrations/*.py"]

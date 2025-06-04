@@ -1,7 +1,6 @@
 import os
 
 import pytest
-from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import expect, sync_playwright
 
