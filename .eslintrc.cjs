@@ -25,9 +25,6 @@ module.exports = {
         // https://www.npmjs.com/package/eslint-plugin-markdown#user-content-advanced-configuration
         '**/*.md/*.{cjs,js,mjs}'
       ],
-      env: {
-        browser: true
-      },
       extends: [
         'eslint:recommended',
         'plugin:import/recommended',
