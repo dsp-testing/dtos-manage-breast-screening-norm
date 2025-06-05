@@ -77,3 +77,13 @@ jobs:
       terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
       version: "${{ needs.metadata.outputs.version }}"
     secrets: inherit
+
+  deploy-stage:
+    name: Deploy stage
+    needs: [build-stage]
+    permissions:
+      id-token: write
+    uses: ./.github/workflows/stage-4-deploy.yaml
+    with:
+      commit_sha: ${{ github.sha }}
+    secrets: inherit
