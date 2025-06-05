@@ -1,23 +1,23 @@
-name: "Perform static analysis"
-description: "Perform static analysis"
+name: 'Perform static analysis'
+description: 'Perform static analysis'
 inputs:
   sonar_organisation_key:
-    description: "Sonar organisation key, used to identify the project"
+    description: 'Sonar organisation key, used to identify the project'
     required: false
   sonar_project_key:
-    description: "Sonar project key, used to identify the project"
+    description: 'Sonar project key, used to identify the project'
     required: false
   sonar_token:
-    description: "Sonar token, the API key"
+    description: 'Sonar token, the API key'
     required: false
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
-    - name: "Check prerequisites for performing static analysis"
+    - name: 'Check prerequisites for performing static analysis'
       shell: bash
       id: check
       run: echo "secret_exist=${{ inputs.sonar_token != '' }}" >> $GITHUB_OUTPUT
-    - name: "Perform static analysis"
+    - name: 'Perform static analysis'
       shell: bash
       if: steps.check.outputs.secret_exist == 'true'
       run: |

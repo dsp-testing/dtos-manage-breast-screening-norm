@@ -25,7 +25,7 @@ package:
     enabled: true
     # the search space to look for packages (options: all-layers, squashed)
     # same as -s ; SYFT_PACKAGE_CATALOGER_SCOPE env var
-    scope: "squashed"
+    scope: 'squashed'
 
 # cataloging file contents is exposed through the power-user subcommand
 file-contents:
@@ -35,7 +35,7 @@ file-contents:
     enabled: true
     # the search space to look for secrets (options: all-layers, squashed)
     # SYFT_FILE_CONTENTS_CATALOGER_SCOPE env var
-    scope: "squashed"
+    scope: 'squashed'
   # skip searching a file entirely if it is above the given size (default = 1MB; unit = bytes)
   # SYFT_FILE_CONTENTS_SKIP_FILES_ABOVE_SIZE env var
   skip-files-above-size: 1048576
@@ -51,10 +51,10 @@ file-metadata:
     enabled: true
     # the search space to look for file metadata (options: all-layers, squashed)
     # SYFT_FILE_METADATA_CATALOGER_SCOPE env var
-    scope: "squashed"
+    scope: 'squashed'
   # the file digest algorithms to use when cataloging files (options: "sha256", "md5", "sha1")
   # SYFT_FILE_METADATA_DIGESTS env var
-  digests: ["sha256"]
+  digests: ['sha256']
 
 # cataloging secrets is exposed through the power-user subcommand
 secrets:
@@ -64,7 +64,7 @@ secrets:
     enabled: true
     # the search space to look for secrets (options: all-layers, squashed)
     # SYFT_SECRETS_CATALOGER_SCOPE env var
-    scope: "all-layers"
+    scope: 'all-layers'
   # show extracted secret values in the final JSON report
   # SYFT_SECRETS_REVEAL_VALUES env var
   reveal-values: false

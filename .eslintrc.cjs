@@ -202,7 +202,6 @@ module.exports = {
         'prefer-template': 'off'
       }
     }
-
   ],
   root: true
 }

@@ -26,7 +26,7 @@ services:
       - POSTGRES_USER=${DATABASE_USER}
       - SSLMODE=${DATABASE_SSLMODE}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USER}']
       interval: 10s
       retries: 5
       start_period: 30s

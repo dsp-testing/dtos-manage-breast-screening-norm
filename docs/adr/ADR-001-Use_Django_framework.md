@@ -1,12 +1,13 @@
 # ADR-nnn: Use Django framework
 
->|              |                                                                                                                                                                                    |
->| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
->| Date         | `17/04/2025` _when the decision was last updated_                                                                                                                                  |
->| Status       | `Proposed`                        |
->| Deciders     | `Team` |
->| Significance | `Structure` |
->| Owners       | @matmoore @malcolmbaig @gpeng |
+> |              |                                                   |
+> | ------------ | ------------------------------------------------- |
+> | Date         | `17/04/2025` _when the decision was last updated_ |
+> | Status       | `Proposed`                                        |
+> | Deciders     | `Team`                                            |
+> | Significance | `Structure`                                       |
+> | Owners       | @matmoore @malcolmbaig @gpeng                     |
+
 ---
 
 - [ADR-nnn: Any Decision Record Template](#adr-nnn-any-decision-record-template)
@@ -32,10 +33,7 @@ in the cloud: a stateless service that renders HTML from tempalates, an ORM that
 
 We're initially intending to productionise the [manage screening events prototype](https://github.com/NHSDigital/manage-screening-events-prototype). We're anticipating that we may build an additional gateway service that would be deployed inside trusts' networks, which this app would communicate with via a queue or API, but this is to be decided later.
 
-
 ## Decision
-
-
 
 ### Drivers
 
@@ -56,6 +54,7 @@ In addition to this repo, we created a [technical spike for Flask](https://githu
 Django has a built in ORM and migrations framework. The Django ORM uses the simpler [ActiveRecord pattern](https://www.thoughtfulcode.com/orm-active-record-vs-data-mapper/), whereas a Flask app would use SQLAlchemy, which implements the Data mapper pattern.
 
 Django's ORM is well documented and easy to get started with:
+
 - [Models documentation](https://docs.djangoproject.com/en/5.2/topics/db/queries/)
 - [Queries documentation](https://docs.djangoproject.com/en/5.2/topics/db/queries/)
 
@@ -157,6 +156,7 @@ We decided to use Django on the basis that:
 ## Consequences
 
 Engineers on the team will need to learn Django. Some suggested learning resources:
+
 - [Django documentation and first steps guide](https://docs.djangoproject.com/en/5.1/)
 - Two scoops of Django 3.x by Daniel and Audrey Greenfield
 - [Django Girls Tutorial](http://tutorial.djangogirls.org/en/index.html)

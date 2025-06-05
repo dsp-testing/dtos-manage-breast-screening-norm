@@ -2,6 +2,6 @@
 
 trustedRegistries:
   - docker.io
-  - "*.gcr.io"
-  - "*.dkr.ecr.*.amazonaws.com"
-  - "*.azurecr.io"
+  - '*.gcr.io'
+  - '*.dkr.ecr.*.amazonaws.com'
+  - '*.azurecr.io'
