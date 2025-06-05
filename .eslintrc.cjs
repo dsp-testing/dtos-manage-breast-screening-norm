@@ -29,6 +29,7 @@ module.exports = {
         'eslint:recommended',
         'plugin:import/recommended',
         'plugin:jest/style',
+        'plugin:jest-dom/recommended',
         'plugin:jsdoc/recommended-typescript-flavor',
         'plugin:n/recommended',
         'plugin:promise/recommended',
@@ -46,7 +47,8 @@ module.exports = {
         'jsdoc',
         'n',
         'promise',
-        'jest'
+        'jest',
+        'jest-dom'
       ],
       rules: {
         // Check import or require statements are A-Z ordered
