@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "compile": "concurrently \"npm run compile:js\" \"npm run compile:css\"",
+    "compile": "concurrently npm:compile:js npm:compile:css --group --prefix none",
     "compile:css": "sass --color --quiet-deps --silence-deprecation=import --load-path=. --load-path=node_modules manage_breast_screening/assets/sass:manage_breast_screening/assets/compiled/css",
     "compile:css:watch": "npm run compile:css -- --watch",
     "compile:js": "rollup -c rollup.config.js --sourcemap",
@@ -13,7 +13,7 @@
     "lint:prettier:fix": "prettier --write .",
     "lint:types": "tsc --build tsconfig.json --pretty",
     "test": "jest --color",
-    "watch": "concurrently \"npm run compile:js:watch\" \"npm run compile:css:watch\""
+    "watch": "concurrently npm:*:watch --prefix none"
   },
   "dependencies": {
     "nhsuk-frontend": "^9.5.2"
