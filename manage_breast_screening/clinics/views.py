@@ -18,6 +18,6 @@ def clinic_list(request, filter="today"):
 
     return render(
         request,
-        "index.html",
+        "index.jinja",
         context={"presenter": presenter},
     )
