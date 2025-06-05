@@ -4,8 +4,9 @@
 module.exports = {
   extends: ['prettier'],
   ignorePatterns: [
+    '**/compiled/**',
     '**/coverage/**',
-    '**/public/**',
+    '**/staticfiles/**',
 
     // Enable dotfile linting
     '!.*',
