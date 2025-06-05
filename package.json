@@ -1,24 +1,21 @@
 {
-  "dependencies": {
-    "nhsuk-frontend": "^9.5.2"
-  },
-  "engines": {
-    "node": "^20.9.0 || ^22.11.0"
-  },
   "type": "module",
   "scripts": {
     "compile": "concurrently \"npm run compile:js\" \"npm run compile:css\"",
-    "watch": "concurrently \"npm run compile:js:watch\" \"npm run compile:css:watch\"",
-    "compile:js": "rollup -c rollup.config.js --sourcemap",
-    "compile:js:watch": "rollup -c rollup.config.js --sourcemap --watch",
     "compile:css": "sass --quiet-deps --silence-deprecation=import --load-path=. --load-path=node_modules manage_breast_screening/assets/sass:manage_breast_screening/assets/compiled/css",
     "compile:css:watch": "sass --quiet-deps --silence-deprecation=import --load-path=. --load-path=node_modules manage_breast_screening/assets/sass:manage_breast_screening/assets/compiled/css --watch",
-    "test": "jest",
+    "compile:js": "rollup -c rollup.config.js --sourcemap",
+    "compile:js:watch": "rollup -c rollup.config.js --sourcemap --watch",
     "lint": "tsc --build tsconfig.json --pretty && npm run lint:js && npm run lint:prettier",
     "lint:js": "eslint --cache --cache-location .cache/eslint --cache-strategy content --color --ignore-path .gitignore \"**/*.{cjs,js,md,mjs}\"",
     "lint:js:fix": "npm run lint:js -- --fix",
-    "lint:prettier":"prettier --cache --cache-location .cache/prettier --cache-strategy content --check .",
-    "lint:prettier:fix": "prettier --write ."
+    "lint:prettier": "prettier --cache --cache-location .cache/prettier --cache-strategy content --check .",
+    "lint:prettier:fix": "prettier --write .",
+    "test": "jest",
+    "watch": "concurrently \"npm run compile:js:watch\" \"npm run compile:css:watch\""
+  },
+  "dependencies": {
+    "nhsuk-frontend": "^9.5.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.27.2",
@@ -54,5 +51,8 @@
     "rollup": "^4.41.1",
     "sass-embedded": "^1.89.0",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
   }
 }
