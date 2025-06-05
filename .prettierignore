@@ -12,3 +12,9 @@ dist/
 
 # Files to ignore
 package-lock.json
+
+# Compiled and static assets
+manage_breast_screening/assets/compiled
+manage_breast_screening/staticfiles
+manage_breast_screening/static
+

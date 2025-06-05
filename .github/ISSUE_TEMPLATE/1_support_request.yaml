@@ -5,7 +5,7 @@
 
 name: 🔧 Support Request
 description: Get help
-labels: ["support"]
+labels: ['support']
 body:
   - type: markdown
     attributes:

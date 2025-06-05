@@ -35,6 +35,7 @@ describe('Set submit events', () => {
     beforeSubmit = false
     successResponse = undefined
     error = undefined
+
     setSubmit(form, {
       onBeforeSubmit() {
         beforeSubmit = true
@@ -46,6 +47,10 @@ describe('Set submit events', () => {
         error = e
       }
     })
+
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(form, 'removeEventListener')
+    jest.spyOn(form, 'submit')
   })
 
   it('calls onBeforeSubmit and onSuccess when the request succeeds', async () => {
@@ -61,6 +66,10 @@ describe('Set submit events', () => {
     expect(beforeSubmit).toBe(true)
     expect(successResponse).toHaveProperty('status', 200)
     expect(error).toBeUndefined()
+
+    // Form submit prevented on success
+    expect(console.error).not.toHaveBeenCalled()
+    expect(form.submit).not.toHaveBeenCalled()
   })
 
   it('calls onBeforeSubmit and onError when the request fails', async () => {
@@ -76,6 +85,13 @@ describe('Set submit events', () => {
     expect(beforeSubmit).toBe(true)
     expect(successResponse).toBeUndefined()
     expect(error).toEqual(Error('Response status: 500'))
+
+    // Form submit fallback on error
+    expect(console.error).toHaveBeenCalledWith(error)
+    expect(form.submit).toHaveBeenCalled()
+
+    // Form submit listener removed
+    expect(form.removeEventListener).toHaveBeenCalled()
   })
 
   it('calls onBeforeSubmit and onError when an error is thrown', async () => {
@@ -88,5 +104,12 @@ describe('Set submit events', () => {
     expect(beforeSubmit).toBe(true)
     expect(successResponse).toBeUndefined()
     expect(error).toEqual(thrownError)
+
+    // Form submit fallback on error
+    expect(console.error).toHaveBeenCalledWith(thrownError)
+    expect(form.submit).toHaveBeenCalled()
+
+    // Form submit listener removed
+    expect(form.removeEventListener).toHaveBeenCalled()
   })
 })

@@ -4,7 +4,6 @@ $govuk-spacing2: 10px;
 $govuk-spacing3: 15px;
 $govuk-spacing4: 20px;
 
-
 .app-secondary-navigation {
   @include nhsuk-responsive-margin(4, "bottom");
 }
@@ -23,7 +22,6 @@ $govuk-spacing4: 20px;
 }
 
 // --------
-
 
 .app-secondary-navigation {
   @include nhsuk-font($size: 19);

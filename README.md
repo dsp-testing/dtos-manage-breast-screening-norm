@@ -45,6 +45,7 @@ make test
 Running `make config` beforehand will ensure you have necessary dependencies installed, including the browser needed by playwright for system tests.
 
 ### Dependency management
+
 Python dependencies are managed via [poetry](https://python-poetry.org/docs/basic-usage/).
 
 - `poetry install` installs dependencies from the lockfile
@@ -77,8 +78,8 @@ Database migrations are handled by [Django's database migration functionality](h
 - `poetry run manage.py migrate` loads database migrations
 - `poetry run manage.py makemigrations` generates new database migrations
 
-
 ### Django admin
+
 We'll probably remove it before deploying to production, but currently Django admin is enabled.
 
 To use it, first create a superuser
@@ -107,15 +108,17 @@ To generate a new app, run:
 poetry run ./manage.py startapp <app_name> manage_breast_screening/`
 ```
 
-## Manual deployment
+## Manual Deployment
+
 The build pipeline builds and pushes a docker image to [Github container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). The app is deployed to an [Azure container app](https://azure.microsoft.com/en-us/products/container-apps) using terraform.
 
 For each environment, e.g. 'dev':
+
 1. Connect to [Azure virtual desktop](https://azure.microsoft.com/en-us/products/virtual-desktop). Ask the platform team for access with Administrator role.
 1. If not present, install the following software: terraform (version 1.7.0), git, make.
-    - Run a Command prompt as administrator
-    - choco install terraform --version 1.7.0
-    - choco install terraform git make
+   - Run a Command prompt as administrator
+   - choco install terraform --version 1.7.0
+   - choco install terraform git make
 1. Open git bash
 1. Clone the repository: `git clone https://github.com/NHSDigital/manage-breast-screening.git`
 1. Enter the directory and select the branch, tag, commit...
@@ -133,6 +136,7 @@ When a PR is merged, Github actions securely triggers the deployment pipeline on
 Access [Azure devops](https://dev.azure.com/nhse-dtos/dtos-manage-breast-screening/_build?definitionId=86) to see the pipeline.
 
 ## Application secrets
+
 The app requires secrets provided as environment variables. Terraform creates an Azure key vault and all its secrets are mapped directly to the app as environment variables. Devs can access the key vault to create and update the secrets manually.
 
 Note [the process requires multiple steps](https://github.com/NHSDigital/dtos-devops-templates/tree/main/infrastructure/modules/container-app#key-vault-secrets) to set up an environment initially.
@@ -144,6 +148,7 @@ Note [the process requires multiple steps](https://github.com/NHSDigital/dtos-de
 - (Internal contributions only) contact the `#screening-manage` team on slack with any questions
 
 ### Makefile and Scripts
+
 `scripts/` contains various scripts that can be used in the CI/CD workflows.
 
 For more information, see the following developer guides:
@@ -152,6 +157,7 @@ For more information, see the following developer guides:
 - [Scripting Docker](https://github.com/NHSDigital/repository-template/blob/main/docs/developer-guides/Scripting_Docker.md)
 
 ## Licence
+
 Unless stated otherwise, the codebase is released under the MIT License. This covers both the codebase and any sample code in the documentation. See [LICENCE.md](./LICENCE.md).
 
 Any HTML or Markdown documentation is [© Crown Copyright](https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/) and available under the terms of the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).

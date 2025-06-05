@@ -1,4 +1,4 @@
-name: "CI/CD main branch"
+name: 'CI/CD main branch'
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   metadata:
-    name: "Set CI/CD metadata"
+    name: 'Set CI/CD metadata'
     runs-on: ubuntu-latest
     timeout-minutes: 1
     outputs:
@@ -19,9 +19,9 @@ jobs:
       version: ${{ steps.variables.outputs.version }}
       tag: ${{ steps.variables.outputs.tag }}
     steps:
-      - name: "Checkout code"
+      - name: 'Checkout code'
         uses: actions/checkout@v4
-      - name: "Set CI/CD variables"
+      - name: 'Set CI/CD variables'
         id: variables
         run: |
           datetime=$(date -u +'%Y-%m-%dT%H:%M:%S%z')
@@ -35,47 +35,47 @@ jobs:
 
   # Scan the commit
   commit-stage:
-    name: "Commit stage"
+    name: 'Commit stage'
     needs: [metadata]
     uses: ./.github/workflows/stage-1-commit.yaml
     with:
-      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
-      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
-      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
-      nodejs_version: "${{ needs.metadata.outputs.nodejs_version }}"
-      python_version: "${{ needs.metadata.outputs.python_version }}"
-      terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
-      version: "${{ needs.metadata.outputs.version }}"
+      build_datetime: '${{ needs.metadata.outputs.build_datetime }}'
+      build_timestamp: '${{ needs.metadata.outputs.build_timestamp }}'
+      build_epoch: '${{ needs.metadata.outputs.build_epoch }}'
+      nodejs_version: '${{ needs.metadata.outputs.nodejs_version }}'
+      python_version: '${{ needs.metadata.outputs.python_version }}'
+      terraform_version: '${{ needs.metadata.outputs.terraform_version }}'
+      version: '${{ needs.metadata.outputs.version }}'
     secrets: inherit
 
   # Test the integrated code
   test-stage:
-    name: "Test stage"
+    name: 'Test stage'
     needs: [metadata]
     uses: ./.github/workflows/stage-2-test.yaml
     with:
-      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
-      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
-      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
-      nodejs_version: "${{ needs.metadata.outputs.nodejs_version }}"
-      python_version: "${{ needs.metadata.outputs.python_version }}"
-      terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
-      version: "${{ needs.metadata.outputs.version }}"
+      build_datetime: '${{ needs.metadata.outputs.build_datetime }}'
+      build_timestamp: '${{ needs.metadata.outputs.build_timestamp }}'
+      build_epoch: '${{ needs.metadata.outputs.build_epoch }}'
+      nodejs_version: '${{ needs.metadata.outputs.nodejs_version }}'
+      python_version: '${{ needs.metadata.outputs.python_version }}'
+      terraform_version: '${{ needs.metadata.outputs.terraform_version }}'
+      version: '${{ needs.metadata.outputs.version }}'
     secrets: inherit
 
   # Build the final artefact with the integrated code
   build-stage: # Recommended maximum execution time is 3 minutes
-    name: "Build stage"
+    name: 'Build stage'
     needs: [metadata, commit-stage, test-stage]
     uses: ./.github/workflows/stage-3-build.yaml
     with:
-      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
-      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
-      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
-      nodejs_version: "${{ needs.metadata.outputs.nodejs_version }}"
-      python_version: "${{ needs.metadata.outputs.python_version }}"
-      terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
-      version: "${{ needs.metadata.outputs.version }}"
+      build_datetime: '${{ needs.metadata.outputs.build_datetime }}'
+      build_timestamp: '${{ needs.metadata.outputs.build_timestamp }}'
+      build_epoch: '${{ needs.metadata.outputs.build_epoch }}'
+      nodejs_version: '${{ needs.metadata.outputs.nodejs_version }}'
+      python_version: '${{ needs.metadata.outputs.python_version }}'
+      terraform_version: '${{ needs.metadata.outputs.terraform_version }}'
+      version: '${{ needs.metadata.outputs.version }}'
     secrets: inherit
 
   deploy-stage:
