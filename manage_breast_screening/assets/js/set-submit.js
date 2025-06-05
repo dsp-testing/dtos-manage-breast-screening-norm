@@ -23,7 +23,7 @@ export default ($form, options = {}) => {
     throw new Error('Form method and action must be defined')
   }
 
-  async function doSubmit() {
+  function doSubmit() {
     if (options.onBeforeSubmit) {
       options.onBeforeSubmit.call($form)
     }
@@ -36,33 +36,51 @@ export default ($form, options = {}) => {
       fetchOptions.signal = AbortSignal.timeout(TIMEOUT)
     }
 
-    let response
-    try {
-      response = await fetch(action, fetchOptions)
+    return fetch(action, fetchOptions)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`)
+        }
 
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`)
-      }
-    } catch (e) {
-      if (options.onError && e instanceof Error) {
-        options.onError.apply($form, [e])
-      }
-      return
-    }
+        return response
+      })
+      .then((response) => {
+        try {
+          options.onSuccess?.apply($form, [response])
+        } catch (error) {
+          console.warn(
+            'setSubmit: the form was submitted successfully, but the onSuccess handler threw an exception.'
+          )
 
-    if (options.onSuccess) {
-      try {
-        options.onSuccess.apply($form, [response])
-      } catch (_) {
-        console.warn(
-          'setSubmit: the form was submitted successfully, but the onSuccess handler threw an exception.'
-        )
-      }
-    }
+          throw error
+        }
+
+        return response
+      })
+      .catch((error) => {
+        console.error(error)
+
+        if (options.onError && error instanceof Error) {
+          options.onError.apply($form, [error])
+        }
+
+        throw error
+      })
   }
 
-  $form.addEventListener('submit', (event) => {
-    doSubmit()
+  /**
+   * @this {HTMLFormElement}
+   * @param {SubmitEvent} event
+   */
+  function handleSubmit(event) {
     event.preventDefault()
-  })
+
+    // Manually submit form on error
+    doSubmit().catch(() => {
+      this.removeEventListener('submit', handleSubmit)
+      this.submit()
+    })
+  }
+
+  $form.addEventListener('submit', handleSubmit)
 }
