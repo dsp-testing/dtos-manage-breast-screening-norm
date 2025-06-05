@@ -1,5 +1,9 @@
 {
   "type": "module",
+  "files": [
+    "manage_breast_screening",
+    "!**/*.test.*"
+  ],
   "scripts": {
     "compile": "concurrently npm:compile:js npm:compile:css --group --prefix none",
     "compile:css": "sass --color --quiet-deps --silence-deprecation=import --load-path=. --load-path=node_modules manage_breast_screening/assets/sass:manage_breast_screening/assets/compiled/css",

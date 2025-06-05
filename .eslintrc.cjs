@@ -178,7 +178,6 @@ module.exports = {
       plugins: ['jest'],
       rules: {
         '@typescript-eslint/no-empty-function': 'off',
-        'n/no-unpublished-import': 'off',
         'promise/always-return': 'off',
         'promise/catch-or-return': 'off'
       }
@@ -201,13 +200,6 @@ module.exports = {
         'import/no-unresolved': 'off',
         'n/no-missing-import': 'off',
         'prefer-template': 'off'
-      }
-    },
-    {
-      // Configure ESLint in Rollup files
-      files: ['rollup.config.js'],
-      rules: {
-        'n/no-unpublished-import': 'off'
       }
     }
 
