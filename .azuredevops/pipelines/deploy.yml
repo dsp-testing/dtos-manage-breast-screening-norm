@@ -9,7 +9,6 @@ parameters:
   type: object
   default:
   - dev
-  - int
 
 stages:
 - ${{ each env in parameters.environments }}:
