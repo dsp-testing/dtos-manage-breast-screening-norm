@@ -1,7 +1,7 @@
 /**
  * @type {TransformOptions}
  */
-export default {
+module.exports = {
   browserslistEnv: 'javascripts',
   presets: [
     [
