@@ -1,8 +1,8 @@
 from django.urls import reverse
 
+from ..core.utils.date_formatting import format_date, format_relative_date, format_time
 from ..participants.models import Appointment
 from ..participants.presenters import ParticipantPresenter
-from ..utils.date_formatting import format_date, format_relative_date, format_time
 
 Status = Appointment.Status
 

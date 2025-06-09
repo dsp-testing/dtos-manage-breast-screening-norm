@@ -4,7 +4,7 @@ import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import expect, sync_playwright
 
-from manage_breast_screening.utils.acessibility import AxeAdapter
+from .utils.acessibility import AxeAdapter
 
 
 @pytest.mark.system

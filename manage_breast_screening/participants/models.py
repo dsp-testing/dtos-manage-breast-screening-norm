@@ -4,7 +4,7 @@ from datetime import date
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
-from manage_breast_screening.clinics.models import BaseModel
+from ..core.models import BaseModel
 
 # List of ethnic groups from
 # https://design-system.service.gov.uk/patterns/equality-information/

@@ -1,5 +1,5 @@
-from ..utils.date_formatting import format_date
-from ..utils.string_formatting import format_age, format_nhs_number, sentence_case
+from ..core.utils.date_formatting import format_date
+from ..core.utils.string_formatting import format_age, format_nhs_number, sentence_case
 
 
 class ParticipantPresenter:
