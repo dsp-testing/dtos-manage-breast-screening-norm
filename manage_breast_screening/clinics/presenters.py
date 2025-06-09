@@ -1,5 +1,5 @@
-from ..utils.date_formatting import format_date, format_time_range
-from ..utils.string_formatting import sentence_case
+from ..core.utils.date_formatting import format_date, format_time_range
+from ..core.utils.string_formatting import sentence_case
 from .models import Clinic
 
 

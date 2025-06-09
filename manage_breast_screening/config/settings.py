@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "manage_breast_screening.core",
     "manage_breast_screening.clinics",
     "manage_breast_screening.participants",
     "manage_breast_screening.mammograms",
@@ -73,7 +74,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "manage_breast_screening.config.urls"
+ROOT_URLCONF = "manage_breast_screening.core.urls"
 
 TEMPLATES = [
     {

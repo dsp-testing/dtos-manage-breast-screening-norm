@@ -15,7 +15,7 @@ class ABForm(Form):
 @pytest.fixture
 def jinja_env() -> Environment:
     return environment(
-        loader=FileSystemLoader(settings.BASE_DIR / "jinja2"),
+        loader=FileSystemLoader(settings.BASE_DIR / "core" / "jinja2"),
         undefined=ChainableUndefined,
         trim_blocks=True,
         lstrip_blocks=True,

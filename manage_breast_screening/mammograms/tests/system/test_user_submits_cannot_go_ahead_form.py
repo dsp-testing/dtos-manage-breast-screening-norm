@@ -4,7 +4,7 @@ import pytest
 from django.urls import reverse
 from playwright.sync_api import expect
 
-from manage_breast_screening.config.system_test_setup import SystemTestCase
+from manage_breast_screening.core.system_test_setup import SystemTestCase
 from manage_breast_screening.participants.models import Appointment
 from manage_breast_screening.participants.tests.factories import (
     AppointmentFactory,
