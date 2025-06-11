@@ -61,7 +61,7 @@
      "value": {
        "text": participant.gender
      }
-   } if full_details,
+   } if full_details else undefined,
    {
      "key": {
        "text": "NHS Number"
@@ -69,7 +69,7 @@
      "value": {
        "text": participant.nhs_number
      }
-   } if full_details,
+   } if full_details else undefined,
    {
      "key": {
        "text": "Date of birth"
@@ -126,6 +126,6 @@
           }
         ]
       }
-   } if show_last_known_mammogram
+   } if show_last_known_mammogram else undefined
   ]
 }) }}
