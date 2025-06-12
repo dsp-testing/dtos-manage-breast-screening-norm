@@ -1,5 +1,3 @@
-import time
-
 from azure.identity import DefaultAzureCredential
 from django.db.backends.postgresql import base
 
@@ -26,18 +24,14 @@ class DatabaseWrapper(base.DatabaseWrapper):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.access_token = None
-        self.azure_credential = None
+        self.azure_credential = DefaultAzureCredential()
 
     def _get_azure_connection_password(self) -> str:
-        self.azure_credential = self.azure_credential or DefaultAzureCredential()
-
-        if not self.access_token or self.access_token.expires_on - 300 < time.time():
-            self.access_token = self.azure_credential.get_token(
-                "https://ossrdbms-aad.database.windows.net/.default"
-            )
-
-        return self.access_token.token
+        # This makes use of in-memory token caching
+        # https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/identity/azure-identity/TOKEN_CACHING.md#in-memory-token-caching
+        return self.azure_credential.get_token(
+            "https://ossrdbms-aad.database.windows.net/.default"
+        ).token
 
     def get_connection_params(self) -> dict:
         params = super().get_connection_params()
