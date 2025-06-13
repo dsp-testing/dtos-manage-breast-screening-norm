@@ -6,16 +6,16 @@ resource "azurerm_resource_group" "main" {
 module "shared_config" {
   source = "../modules/dtos-devops-templates/infrastructure/modules/shared-config"
 
-  env = var.environment
-  location = local.region
+  env         = var.environment
+  location    = local.region
   application = var.app_short_name
 }
 
 module "hub_config" {
   source = "../modules/dtos-devops-templates/infrastructure/modules/shared-config"
 
-  env = var.hub
-  location = local.region
+  env         = var.hub
+  location    = local.region
   application = "hub"
 }
 
@@ -68,6 +68,25 @@ module "container-app-environment" {
   private_dns_zone_rg_name   = "rg-hub-${var.hub}-uks-private-dns-zones"
 }
 
+module "db_migrate" {
+  source = "../modules/dtos-devops-templates/infrastructure/modules/container-app-job"
+
+  name                         = "manage-breast-screening-dbm-${var.environment}"
+  container_app_environment_id = module.container-app-environment.id
+  resource_group_name          = azurerm_resource_group.main.name
+  container_command            = ["python"]
+  container_args               = ["manage.py", "migrate"]
+  docker_image                 = var.docker_image
+  user_assigned_identity_ids   = [module.db_connect_identity.id]
+  environment_variables = {
+    DATABASE_HOST   = module.postgres.host
+    DATABASE_NAME   = module.postgres.database_names[0]
+    DATABASE_USER   = module.db_connect_identity.name
+    SSL_MODE        = "require"
+    AZURE_CLIENT_ID = module.db_connect_identity.client_id
+  }
+}
+
 module "webapp" {
   source                           = "../modules/dtos-devops-templates/infrastructure/modules/container-app"
   name                             = "manage-breast-screening-web-${var.environment}"
@@ -76,8 +95,14 @@ module "webapp" {
   fetch_secrets_from_app_key_vault = var.fetch_secrets_from_app_key_vault
   app_key_vault_id                 = module.app-key-vault.key_vault_id
   docker_image                     = var.docker_image
+  user_assigned_identity_ids       = [module.db_connect_identity.id]
   environment_variables = {
-    "ALLOWED_HOSTS" = "manage-breast-screening-web-${var.environment}.${module.container-app-environment.default_domain}"
+    ALLOWED_HOSTS   = "manage-breast-screening-web-${var.environment}.${module.container-app-environment.default_domain}"
+    DATABASE_HOST   = module.postgres.host
+    DATABASE_NAME   = module.postgres.database_names[0]
+    DATABASE_USER   = module.db_connect_identity.name
+    SSL_MODE        = "require"
+    AZURE_CLIENT_ID = module.db_connect_identity.client_id
   }
   is_web_app = true
   http_port  = 8000
