@@ -78,6 +78,8 @@ Database migrations are handled by [Django's database migration functionality](h
 - `poetry run manage.py migrate` loads database migrations
 - `poetry run manage.py makemigrations` generates new database migrations
 
+Note the database migration runs in the deployment pipeline *after* the application deployment. The deployed code must be compatible with the schema before AND after the schema changes. This also removes potential errors when using a rolling app deployment as multiple app versions may access the database at the same time. To enforce it, make sure to always separate code changes and database migrations into different pull requests.
+
 ### Django admin
 
 We'll probably remove it before deploying to production, but currently Django admin is enabled.

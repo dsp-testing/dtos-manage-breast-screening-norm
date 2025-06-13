@@ -109,12 +109,13 @@ WSGI_APPLICATION = "manage_breast_screening.config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "manage_breast_screening.config.postgresql",
         "NAME": environ.get("DATABASE_NAME", ""),
         "USER": environ.get("DATABASE_USER", ""),
         "PASSWORD": environ.get("DATABASE_PASSWORD", ""),
         "HOST": environ.get("DATABASE_HOST", ""),
         "PORT": "5432",
+        "OPTIONS": {"sslmode": environ.get("DATABASE_SSLMODE", "prefer")},
     }
 }
 
