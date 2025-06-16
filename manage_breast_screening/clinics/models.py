@@ -15,7 +15,7 @@ class Provider(BaseModel):
 
 class Setting(BaseModel):
     name = models.TextField()
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    provider = models.ForeignKey(Provider, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"Setting: {self.name}"
@@ -98,7 +98,7 @@ class Clinic(BaseModel):
 
     TYPE_CHOICES = {Type.ASSESSMENT: "Assessment", Type.SCREENING: "Screening"}
 
-    setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
+    setting = models.ForeignKey(Setting, on_delete=models.PROTECT)
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
     type = models.CharField(choices=TYPE_CHOICES, max_length=50)
@@ -133,7 +133,7 @@ class Clinic(BaseModel):
 
 class ClinicSlot(BaseModel):
     clinic = models.ForeignKey(
-        Clinic, on_delete=models.CASCADE, related_name="clinic_slots"
+        Clinic, on_delete=models.PROTECT, related_name="clinic_slots"
     )
     starts_at = models.DateTimeField()
     duration_in_minutes = models.IntegerField()

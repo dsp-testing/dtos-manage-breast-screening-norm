@@ -81,14 +81,14 @@ class Participant(BaseModel):
 class ParticipantAddress(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     participant = models.OneToOneField(
-        Participant, on_delete=models.CASCADE, related_name="address"
+        Participant, on_delete=models.PROTECT, related_name="address"
     )
     lines = ArrayField(models.CharField(), size=5, blank=True)
     postcode = models.CharField(blank=True, null=True)
 
 
 class ScreeningEpisode(BaseModel):
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    participant = models.ForeignKey(Participant, on_delete=models.PROTECT)
 
     def screening_history(self):
         """
@@ -134,10 +134,10 @@ class Appointment(BaseModel):
         Status.ATTENDED_NOT_SCREENED: "Attended not screened",
     }
 
-    screening_episode = models.ForeignKey(ScreeningEpisode, on_delete=models.CASCADE)
+    screening_episode = models.ForeignKey(ScreeningEpisode, on_delete=models.PROTECT)
     clinic_slot = models.ForeignKey(
         "clinics.ClinicSlot",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
     )
     status = models.CharField(
         choices=STATUS_CHOICES, max_length=50, default=Status.CONFIRMED
