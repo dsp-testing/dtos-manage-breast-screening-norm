@@ -59,6 +59,11 @@ HELP_SCRIPT = \
 		} \
 	}
 
+shellscript-lint-all: # Lint all shell scripts in the scripts directory, do not fail on error, just print the error messages @Quality
+	for file in $$(find scripts -type f -name "*.sh"); do \
+		file=$${file} scripts/shellscript-linter.sh ||: ; \
+	done
+
 .PHONY: _install-tool _install-tools
 .ONESHELL:
 MAKEFLAGS := --no-print-directory
