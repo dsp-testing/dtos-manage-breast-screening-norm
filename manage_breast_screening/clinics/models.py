@@ -1,3 +1,4 @@
+import uuid
 from datetime import date
 from enum import StrEnum
 
@@ -61,14 +62,11 @@ class ClinicQuerySet(models.QuerySet):
         """
         return self.filter(starts_at__date__lt=date.today())
 
+    def with_statuses(self):
+        return self.prefetch_related("statuses")
+
 
 class Clinic(BaseModel):
-    class State:
-        SCHEDULED = "SCHEDULED"
-        IN_PROGRESS = "IN_PROGRESS"
-        CLOSED = "CLOSED"
-        CANCELLED = "CANCELLED"
-
     class RiskType:
         MIXED_RISK = "MIXED_RISK"
         ROUTINE_RISK = "ROUTINE_RISK"
@@ -83,13 +81,6 @@ class Clinic(BaseModel):
         MORNING = "morning"
         AFTERNOON = "afternoon"
 
-    STATE_CHOICES = {
-        State.SCHEDULED: "Scheduled",
-        State.IN_PROGRESS: "In progress",
-        State.CLOSED: "Closed",
-        State.CANCELLED: "Cancelled",
-    }
-
     RISK_TYPE_CHOICES = {
         RiskType.MIXED_RISK: "Mixed risk",
         RiskType.ROUTINE_RISK: "Routine risk",
@@ -103,9 +94,11 @@ class Clinic(BaseModel):
     ends_at = models.DateTimeField()
     type = models.CharField(choices=TYPE_CHOICES, max_length=50)
     risk_type = models.CharField(choices=RISK_TYPE_CHOICES, max_length=50)
-    state = models.CharField(choices=STATE_CHOICES, max_length=50)
 
     objects = ClinicQuerySet.as_manager()
+
+    def current_status(self):
+        return self.statuses.first()
 
     def session_type(self):
         start_hour = self.starts_at.hour
@@ -137,3 +130,27 @@ class ClinicSlot(BaseModel):
     )
     starts_at = models.DateTimeField()
     duration_in_minutes = models.IntegerField()
+
+
+class ClinicStatus(models.Model):
+    SCHEDULED = "SCHEDULED"
+    IN_PROGRESS = "IN_PROGRESS"
+    CLOSED = "CLOSED"
+    CANCELLED = "CANCELLED"
+
+    STATE_CHOICES = [
+        (SCHEDULED, "Scheduled"),
+        (IN_PROGRESS, "In progress"),
+        (CLOSED, "Closed"),
+        (CANCELLED, "Cancelled"),
+    ]
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    state = models.CharField(choices=STATE_CHOICES, max_length=50)
+    clinic = models.ForeignKey(
+        Clinic, on_delete=models.PROTECT, related_name="statuses"
+    )

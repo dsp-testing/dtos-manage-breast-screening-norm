@@ -7,12 +7,6 @@ from .presenters import AppointmentListPresenter
 from .models import Clinic
 from ..participants.models import Appointment
 
-STATUS_COLORS = {
-    Clinic.State.SCHEDULED: "blue",  # default blue
-    Clinic.State.IN_PROGRESS: "blue",
-    Clinic.State.CLOSED: "grey",
-}
-
 
 def clinic_list(request, filter="today"):
     clinics = Clinic.objects.prefetch_related("setting").by_filter(filter)

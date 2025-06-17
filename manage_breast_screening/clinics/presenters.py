@@ -2,8 +2,8 @@ from django.urls import reverse
 
 from ..core.utils.date_formatting import format_date, format_time_range
 from ..core.utils.string_formatting import sentence_case
-from .models import Clinic
 from ..mammograms.presenters import AppointmentPresenter
+from .models import ClinicStatus
 
 
 class ClinicsPresenter:
@@ -26,9 +26,9 @@ class ClinicsPresenter:
 
 class ClinicPresenter:
     STATUS_COLORS = {
-        Clinic.State.SCHEDULED: "blue",  # default blue
-        Clinic.State.IN_PROGRESS: "blue",
-        Clinic.State.CLOSED: "grey",
+        ClinicStatus.SCHEDULED: "blue",  # default blue
+        ClinicStatus.IN_PROGRESS: "blue",
+        ClinicStatus.CLOSED: "grey",
     }
 
     def __init__(self, clinic):
@@ -44,9 +44,13 @@ class ClinicPresenter:
 
     @property
     def state(self):
+        status = self._clinic.current_status()
+        value = status.state
+        text = status.get_state_display()
+
         return {
-            "text": self._clinic.get_state_display(),
-            "classes": "nhsuk-tag--" + self.STATUS_COLORS[self._clinic.state],
+            "text": text,
+            "classes": "nhsuk-tag--" + self.STATUS_COLORS[value],
         }
 
     @property
