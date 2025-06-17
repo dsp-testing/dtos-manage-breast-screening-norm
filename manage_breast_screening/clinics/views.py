@@ -33,7 +33,7 @@ def clinic(request, id, filter="remaining"):
     ).select_related("clinic_slot", "screening_episode__participant")
     counts_by_filter = Appointment.objects.filter_counts_for_clinic(clinic)
     presented_appointment_list = AppointmentListPresenter(
-        appointments, filter, counts_by_filter
+        id, appointments, filter, counts_by_filter
     )
     return render(
         request,

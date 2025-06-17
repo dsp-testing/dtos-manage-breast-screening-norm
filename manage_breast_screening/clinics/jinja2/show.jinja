@@ -28,25 +28,18 @@
   </h1>
   <p>{{ presented_clinic.time_range }} - {{ presented_clinic.starts_at }}</p>
 
-  {% set ns = namespace() %}
-  {% set ns.secondaryNavItems = [] %}
-  {% for item in [
-    { "filter": 'remaining', "label": 'Remaining' },
-    { "filter": 'checked_in', "label": 'Checked in' },
-    { "filter": 'complete', "label": 'Complete' },
-    { "filter": 'all', "label": 'All' }
-  ] %}
-  {% set href %}/clinics/{{ presented_clinic.id }}/{{ item.filter }}{% endset %}
-  {% set ns.secondaryNavItems = ns.secondaryNavItems + [{
-    "text": (item.label + " " + appCount(presented_appointment_list.counts_by_filter[item.filter])) | safe,
-    "href": href | trim,
-    "current": true if item.filter == presented_appointment_list.filter
-  }] %}
+  {% set secondary_nav_items = [] %}
+  {% for nav_data in presented_appointment_list.secondary_nav_data %}
+    {% do secondary_nav_items.append({
+      "text": (nav_data.label + " " + appCount(nav_data.count)),
+      "href": nav_data.href,
+      "current": nav_data.current
+    }) %}
   {% endfor %}
 
   {{ app_secondary_navigation({
     "visuallyHiddenTitle": "Secondary menu",
-    "items": ns.secondaryNavItems
+    "items": secondary_nav_items
   }) }}
 
   {% set table_rows = [] %}

@@ -1,3 +1,5 @@
+from django.urls import reverse
+
 from ..core.utils.date_formatting import format_date, format_time_range
 from ..core.utils.string_formatting import sentence_case
 from .models import Clinic
@@ -53,7 +55,7 @@ class ClinicPresenter:
 
 
 class AppointmentListPresenter:
-    def __init__(self, appointments, filter, counts_by_filter):
+    def __init__(self, clinic_id, appointments, filter, counts_by_filter):
         sorted_appointments = sorted(
             appointments, key=lambda a: a.clinic_slot.starts_at
         )
@@ -62,3 +64,42 @@ class AppointmentListPresenter:
         ]
         self.filter = filter
         self.counts_by_filter = counts_by_filter
+        self.clinic_id = clinic_id
+
+    @property
+    def secondary_nav_data(self):
+        filters = [
+            {
+                "label": "Remaining",
+                "filter": "remaining",
+            },
+            {
+                "label": "Checked in",
+                "filter": "checked_in",
+            },
+            {
+                "label": "Complete",
+                "filter": "complete",
+            },
+            {
+                "label": "All",
+                "filter": "all",
+            },
+        ]
+        nav = []
+        for filter in filters:
+            filter_label = filter["label"]
+            filter_identifier = filter["filter"]
+            count = self.counts_by_filter.get(filter_identifier)
+            nav.append(
+                {
+                    "label": filter_label,
+                    "count": count,
+                    "href": reverse(
+                        "clinics:show_" + filter_identifier,
+                        kwargs={"id": self.clinic_id},
+                    ),
+                    "current": filter_identifier == self.filter,
+                }
+            )
+        return nav
