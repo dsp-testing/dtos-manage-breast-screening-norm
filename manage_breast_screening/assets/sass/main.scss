@@ -35,11 +35,11 @@ a[href="#"] {
 }
 
 // Status tag positioning within headers
-.app-header-with-status {
+.app-header {
   position: relative;
 }
 
-.app-header-with-status__status-tag {
+.app-header__status-tag {
   position: absolute;
   top: 10px;
   right: 0;

@@ -15,11 +15,11 @@
 {% endblock beforeContent %}
 
 {% block page_content %}
-  <h1 class="nhsuk-heading-l app-header-with-status">
+  <h1 class="nhsuk-heading-l app-header">
       <span class="nhsuk-caption-l">{{ presented_clinic.setting_name }}</span>
       {{ presented_clinic.risk_type }} screening clinic
 
-      <div class="app-header-with-status__status-tag">
+      <div class="app-header__status-tag">
         {{ tag({
             "html": presented_clinic.state.text | no_wrap,
             "classes": presented_clinic.state.classes,
