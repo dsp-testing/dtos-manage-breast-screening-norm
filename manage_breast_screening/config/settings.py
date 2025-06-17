@@ -215,3 +215,5 @@ LOGGING = {
         },
     },
 }
+
+AUDIT_EXCLUDED_FIELDS = ["password", "token", "created_at", "updated_at", "id"]
