@@ -1,6 +1,21 @@
 version: 2
 
+multi-ecosystem-groups:
+  templates:
+    schedule:
+      interval: weekly
+
 updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    patterns: ['nhsuk-frontend']
+    multi-ecosystem-group: templates
+
+  - package-ecosystem: 'pip'
+    directory: '/'
+    patterns: ['nhsuk-frontend-jinja']
+    multi-ecosystem-group: templates
+
   - package-ecosystem: 'docker'
     directory: '/'
     schedule:
@@ -58,11 +73,14 @@ updates:
     schedule:
       interval: 'daily'
 
+    ignore:
+      # nhsuk-frontend-jinja needs to be updated in conjunction with nhsuk-frontend
+      - dependency-name: nhsuk-frontend-jinja
+
     groups:
       frontend:
         patterns:
           - jinja2
-          - nhsuk-frontend-jinja
           - whitenoise
 
       infra:
