@@ -1,6 +1,6 @@
 # Manage breast screening
 
-[![Main branch CI](https://github.com/nhsdigital/manage-breast-screening/actions/workflows/cicd-2-main-branch.yaml/badge.svg)](https://github.com/nhsdigital/manage-breast-screening/actions/workflows/cicd-2-main-branch.yaml)
+[![Main branch CI](https://github.com/nhsdigital/dtos-manage-breast-screening/actions/workflows/cicd-2-main-branch.yaml/badge.svg)](https://github.com/nhsdigital/dtos-manage-breast-screening/actions/workflows/cicd-2-main-branch.yaml)
 
 The new service is a system for managing breast screening clinics, including:
 
@@ -122,7 +122,7 @@ For each environment, e.g. 'dev':
    - choco install terraform --version 1.7.0
    - choco install terraform git make
 1. Open git bash
-1. Clone the repository: `git clone https://github.com/NHSDigital/manage-breast-screening.git`
+1. Clone the repository: `git clone https://github.com/NHSDigital/dtos-manage-breast-screening.git`
 1. Enter the directory and select the branch, tag, commit...
 1. Login: `az login`
 1. Create the resource group: `make dev resource-group-init`. This is only required when creating the environment from scratch.

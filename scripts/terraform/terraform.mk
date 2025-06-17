@@ -1,4 +1,4 @@
-DOCKER_IMAGE=ghcr.io/nhsdigital/manage-breast-screening
+DOCKER_IMAGE=ghcr.io/nhsdigital/dtos-manage-breast-screening
 REGION=UK South
 APP_SHORT_NAME=manbrs
 STORAGE_ACCOUNT_RG=rg-dtos-state-files
