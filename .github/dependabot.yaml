@@ -11,6 +11,11 @@ updates:
     schedule:
       interval: 'daily'
 
+    groups:
+      docker:
+        patterns:
+          - 'docker/*'
+
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
@@ -18,7 +23,7 @@ updates:
 
     # nhsuk-frontend needs to be updated in conjunction with nhsuk-frontend-jinja
     ignore:
-      - dependency-name: "nhsuk-frontend"
+      - dependency-name: 'nhsuk-frontend'
 
     groups:
       build:
