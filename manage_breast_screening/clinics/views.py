@@ -28,10 +28,10 @@ def clinic_list(request, filter="today"):
 def clinic(request, id, filter="remaining"):
     clinic = Clinic.objects.prefetch_related("setting").get(id=id)
     presented_clinic = ClinicPresenter(clinic)
-    appointments = Appointment.clinic_appointments_by_filter(
+    appointments = Appointment.objects.for_clinic_and_filter(
         clinic, filter
     ).select_related("clinic_slot", "screening_episode__participant")
-    counts_by_filter = Appointment.counts_by_filter(clinic)
+    counts_by_filter = Appointment.objects.filter_counts_for_clinic(clinic)
     presented_appointment_list = AppointmentListPresenter(
         appointments, filter, counts_by_filter
     )

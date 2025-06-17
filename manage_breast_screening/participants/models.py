@@ -137,6 +137,25 @@ class AppointmentQuerySet(models.QuerySet):
             ]
         )
 
+    def for_clinic_and_filter(self, clinic, filter):
+        match filter:
+            case "remaining":
+                return self.remaining().filter(clinic_slot__clinic=clinic)
+            case "checked_in":
+                return self.checked_in().filter(clinic_slot__clinic=clinic)
+            case "complete":
+                return self.complete().filter(clinic_slot__clinic=clinic)
+            case "all":
+                return self.filter(clinic_slot__clinic=clinic)
+            case _:
+                raise ValueError(filter)
+
+    def filter_counts_for_clinic(self, clinic):
+        counts = {}
+        for filter in ["remaining", "checked_in", "complete", "all"]:
+            counts[filter] = self.for_clinic_and_filter(clinic, filter).count()
+        return counts
+
 
 class Appointment(BaseModel):
     class Status:
@@ -170,24 +189,3 @@ class Appointment(BaseModel):
     )
     reinvite = models.BooleanField(default=False)
     stopped_reasons = models.JSONField(null=True, blank=True)
-
-    @classmethod
-    def clinic_appointments_by_filter(cls, clinic, filter):
-        match filter:
-            case "remaining":
-                return cls.objects.remaining().filter(clinic_slot__clinic=clinic)
-            case "checked_in":
-                return cls.objects.checked_in().filter(clinic_slot__clinic=clinic)
-            case "complete":
-                return cls.objects.complete().filter(clinic_slot__clinic=clinic)
-            case "all":
-                return cls.objects.filter(clinic_slot__clinic=clinic)
-            case _:
-                raise ValueError(filter)
-
-    @classmethod
-    def counts_by_filter(cls, clinic):
-        counts = {}
-        for filter in ["remaining", "checked_in", "complete", "all"]:
-            counts[filter] = cls.clinic_appointments_by_filter(clinic, filter).count()
-        return counts

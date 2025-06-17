@@ -80,7 +80,7 @@ class TestAppointment:
             ordered=False,
         )
 
-    def test_clinic_appointments_by_filter(self):
+    def test_by_clinic_and_filter(self):
         # Create a clinic and clinic slots
         clinic = ClinicFactory.create()
         clinic_slot1 = ClinicSlotFactory.create(clinic=clinic)
@@ -107,27 +107,27 @@ class TestAppointment:
         )
 
         assertQuerySetEqual(
-            models.Appointment.clinic_appointments_by_filter(clinic, "remaining"),
+            models.Appointment.objects.for_clinic_and_filter(clinic, "remaining"),
             {confirmed, checked_in},
             ordered=False,
         )
         assertQuerySetEqual(
-            models.Appointment.clinic_appointments_by_filter(clinic, "checked_in"),
+            models.Appointment.objects.for_clinic_and_filter(clinic, "checked_in"),
             {checked_in},
             ordered=False,
         )
         assertQuerySetEqual(
-            models.Appointment.clinic_appointments_by_filter(clinic, "complete"),
+            models.Appointment.objects.for_clinic_and_filter(clinic, "complete"),
             {screened},
             ordered=False,
         )
         assertQuerySetEqual(
-            models.Appointment.clinic_appointments_by_filter(clinic, "all"),
+            models.Appointment.objects.for_clinic_and_filter(clinic, "all"),
             {confirmed, checked_in, screened},
             ordered=False,
         )
 
-    def test_counts_by_filter(self):
+    def test_filter_counts_for_clinic(self):
         # Create a clinic and clinic slots
         clinic = ClinicFactory.create()
         clinic_slot1 = ClinicSlotFactory.create(clinic=clinic)
@@ -157,7 +157,7 @@ class TestAppointment:
             clinic_slot=other_slot, status=models.Appointment.Status.CONFIRMED
         )
 
-        counts = models.Appointment.counts_by_filter(clinic)
+        counts = models.Appointment.objects.filter_counts_for_clinic(clinic)
 
         assert counts["remaining"] == 3
         assert counts["checked_in"] == 1
