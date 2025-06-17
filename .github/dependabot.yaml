@@ -21,8 +21,8 @@ updates:
     schedule:
       interval: 'daily'
 
-    # nhsuk-frontend needs to be updated in conjunction with nhsuk-frontend-jinja
     ignore:
+      # nhsuk-frontend needs to be updated in conjunction with nhsuk-frontend-jinja
       - dependency-name: 'nhsuk-frontend'
 
     groups:
@@ -67,22 +67,22 @@ updates:
 
       infra:
         patterns:
-          - gunicorn
           - azure-identity
+          - gunicorn
           - psycopg
 
       lint_and_test:
         patterns:
-          - ruff
+          - factory-boy
           - 'pytest*'
           - '*playwright*'
+          - ruff
           - time-machine
-          - factory-boy
 
       tools:
         patterns:
-          - 'ipdb'
           - 'dotenv'
+          - 'ipdb'
 
   - package-ecosystem: 'terraform'
     directory: '/'
