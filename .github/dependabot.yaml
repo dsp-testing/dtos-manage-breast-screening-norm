@@ -16,10 +16,64 @@ updates:
     schedule:
       interval: 'daily'
 
+    groups:
+      build:
+        patterns:
+          - '@babel/*'
+          - '@rollup/*'
+          - 'rollup'
+          - 'rollup-*'
+          - 'sass-embedded'
+
+      lint:
+        patterns:
+          - '@typescript-eslint/*'
+          - 'eslint'
+          - 'eslint-*'
+          - 'prettier'
+          - 'typescript'
+
+      test:
+        patterns:
+          - '@testing-library/*'
+          - 'babel-jest'
+          - 'jest'
+          - 'jest-*'
+
+      tools:
+        patterns:
+          - 'concurrently'
+
   - package-ecosystem: 'pip'
     directory: '/'
     schedule:
       interval: 'daily'
+
+    groups:
+      frontend:
+        patterns:
+          - jinja2
+          - nhsuk-frontend-jinja
+          - whitenoise
+
+      infra:
+        patterns:
+          - gunicorn
+          - azure-identity
+          - psycopg
+
+      lint_and_test:
+        patterns:
+          - ruff
+          - 'pytest*'
+          - '*playwright*'
+          - time-machine
+          - factory-boy
+
+      tools:
+        patterns:
+          - 'ipdb'
+          - 'dotenv'
 
   - package-ecosystem: 'terraform'
     directory: '/'
