@@ -56,11 +56,8 @@ class ClinicPresenter:
 
 class AppointmentListPresenter:
     def __init__(self, clinic_id, appointments, filter, counts_by_filter):
-        sorted_appointments = sorted(
-            appointments, key=lambda a: a.clinic_slot.starts_at
-        )
         self.appointments = [
-            AppointmentPresenter(appointment) for appointment in sorted_appointments
+            AppointmentPresenter(appointment) for appointment in appointments
         ]
         self.filter = filter
         self.counts_by_filter = counts_by_filter

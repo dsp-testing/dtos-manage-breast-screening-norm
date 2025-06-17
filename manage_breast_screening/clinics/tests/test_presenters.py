@@ -1,23 +1,15 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from unittest.mock import MagicMock
 import uuid
-
 import pytest
+
 from django.urls import reverse
 
 from manage_breast_screening.clinics.presenters import (
     ClinicPresenter,
     AppointmentListPresenter,
 )
-
-from manage_breast_screening.clinics.tests.factories import (
-    ClinicFactory,
-    ClinicSlotFactory,
-)
-from manage_breast_screening.core.utils.date_formatting import format_time
-from manage_breast_screening.participants.tests.factories import AppointmentFactory
-
-from ..models import Clinic
+from manage_breast_screening.clinics.models import Clinic
 
 
 @pytest.fixture
@@ -51,42 +43,6 @@ def test_clinic_presenter(mock_clinic):
 
 
 class TestAppointmentListPresenter:
-    @pytest.mark.django_db
-    def test_sorts_by_start_time(self):
-        clinic = ClinicFactory()
-        appointment1 = AppointmentFactory(
-            clinic_slot=ClinicSlotFactory(
-                clinic=clinic,
-                starts_at=datetime(2025, 1, 1, 13, 0, tzinfo=timezone.utc),  # 1pm
-            )
-        )
-        appointment2 = AppointmentFactory(
-            clinic_slot=ClinicSlotFactory(
-                clinic=clinic,
-                starts_at=datetime(2025, 1, 1, 9, 0, tzinfo=timezone.utc),  # 9am
-            )
-        )
-        appointment3 = AppointmentFactory(
-            clinic_slot=ClinicSlotFactory(
-                clinic=clinic,
-                starts_at=datetime(2025, 1, 1, 11, 30, tzinfo=timezone.utc),  # 11:30am
-            )
-        )
-
-        presenter = AppointmentListPresenter(
-            clinic.id, [appointment1, appointment2, appointment3], "all", {}
-        )
-
-        sorted_times = [
-            appointment.clinic_slot.starts_at for appointment in presenter.appointments
-        ]
-
-        assert sorted_times == [
-            format_time(datetime(2025, 1, 1, 9, 0, tzinfo=timezone.utc)),  # 9am
-            format_time(datetime(2025, 1, 1, 11, 30, tzinfo=timezone.utc)),  # 11:30am
-            format_time(datetime(2025, 1, 1, 13, 0, tzinfo=timezone.utc)),  # 1pm
-        ]
-
     @pytest.mark.django_db
     def test_secondary_nav_data(self):
         clinic_id = uuid.uuid4()
