@@ -16,6 +16,10 @@ updates:
     schedule:
       interval: 'daily'
 
+    # nhsuk-frontend needs to be updated in conjunction with nhsuk-frontend-jinja
+    ignore:
+      - dependency-name: "nhsuk-frontend"
+
     groups:
       build:
         patterns:
