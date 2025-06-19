@@ -57,6 +57,10 @@ class AppointmentPresenter:
         return self.participant.url
 
     @property
+    def start_time(self):
+        return self.clinic_slot.starts_at
+
+    @property
     def status(self):
         colour = status_colour(self._appointment.status)
 
@@ -102,3 +106,7 @@ class ClinicSlotPresenter:
         clinic = self._clinic
 
         return f"{format_time(clinic_slot.starts_at)} ({clinic_slot.duration_in_minutes} minutes) - {format_date(clinic.starts_at)} ({format_relative_date(clinic.starts_at)})"
+
+    @property
+    def starts_at(self):
+        return format_time(self._clinic_slot.starts_at)

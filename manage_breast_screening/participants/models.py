@@ -114,6 +114,49 @@ class ScreeningEpisode(BaseModel):
             return None
 
 
+class AppointmentQuerySet(models.QuerySet):
+    def remaining(self):
+        return self.filter(
+            status__in=[
+                Appointment.Status.CONFIRMED,
+                Appointment.Status.CHECKED_IN,
+            ]
+        )
+
+    def checked_in(self):
+        return self.filter(status=Appointment.Status.CHECKED_IN)
+
+    def complete(self):
+        return self.filter(
+            status__in=[
+                Appointment.Status.CANCELLED,
+                Appointment.Status.DID_NOT_ATTEND,
+                Appointment.Status.SCREENED,
+                Appointment.Status.PARTIALLY_SCREENED,
+                Appointment.Status.ATTENDED_NOT_SCREENED,
+            ]
+        )
+
+    def for_clinic_and_filter(self, clinic, filter):
+        match filter:
+            case "remaining":
+                return self.remaining().filter(clinic_slot__clinic=clinic)
+            case "checked_in":
+                return self.checked_in().filter(clinic_slot__clinic=clinic)
+            case "complete":
+                return self.complete().filter(clinic_slot__clinic=clinic)
+            case "all":
+                return self.filter(clinic_slot__clinic=clinic)
+            case _:
+                raise ValueError(filter)
+
+    def filter_counts_for_clinic(self, clinic):
+        counts = {}
+        for filter in ["remaining", "checked_in", "complete", "all"]:
+            counts[filter] = self.for_clinic_and_filter(clinic, filter).count()
+        return counts
+
+
 class Appointment(BaseModel):
     class Status:
         CONFIRMED = "CONFIRMED"
@@ -133,6 +176,8 @@ class Appointment(BaseModel):
         Status.PARTIALLY_SCREENED: "Partially screened",
         Status.ATTENDED_NOT_SCREENED: "Attended not screened",
     }
+
+    objects = AppointmentQuerySet.as_manager()
 
     screening_episode = models.ForeignKey(ScreeningEpisode, on_delete=models.PROTECT)
     clinic_slot = models.ForeignKey(

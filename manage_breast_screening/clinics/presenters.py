@@ -1,6 +1,9 @@
+from django.urls import reverse
+
 from ..core.utils.date_formatting import format_date, format_time_range
 from ..core.utils.string_formatting import sentence_case
 from .models import Clinic
+from ..mammograms.presenters import AppointmentPresenter
 
 
 class ClinicsPresenter:
@@ -30,6 +33,7 @@ class ClinicPresenter:
 
     def __init__(self, clinic):
         self._clinic = clinic
+        self.id = clinic.id
         self.starts_at = format_date(clinic.starts_at)
         self.session_type = clinic.session_type().capitalize()
         self.number_of_slots = clinic.clinic_slots.count()
@@ -44,3 +48,55 @@ class ClinicPresenter:
             "text": self._clinic.get_state_display(),
             "classes": "nhsuk-tag--" + self.STATUS_COLORS[self._clinic.state],
         }
+
+    @property
+    def setting_name(self):
+        return self._clinic.setting.name
+
+
+class AppointmentListPresenter:
+    def __init__(self, clinic_id, appointments, filter, counts_by_filter):
+        self.appointments = [
+            AppointmentPresenter(appointment) for appointment in appointments
+        ]
+        self.filter = filter
+        self.counts_by_filter = counts_by_filter
+        self.clinic_id = clinic_id
+
+    @property
+    def secondary_nav_data(self):
+        filters = [
+            {
+                "label": "Remaining",
+                "filter": "remaining",
+            },
+            {
+                "label": "Checked in",
+                "filter": "checked_in",
+            },
+            {
+                "label": "Complete",
+                "filter": "complete",
+            },
+            {
+                "label": "All",
+                "filter": "all",
+            },
+        ]
+        nav = []
+        for filter in filters:
+            filter_label = filter["label"]
+            filter_identifier = filter["filter"]
+            count = self.counts_by_filter.get(filter_identifier)
+            nav.append(
+                {
+                    "label": filter_label,
+                    "count": count,
+                    "href": reverse(
+                        "clinics:show_" + filter_identifier,
+                        kwargs={"id": self.clinic_id},
+                    ),
+                    "current": filter_identifier == self.filter,
+                }
+            )
+        return nav
