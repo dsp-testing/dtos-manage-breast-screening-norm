@@ -1,11 +1,9 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
-from .presenters import ClinicsPresenter, ClinicPresenter
-from .presenters import AppointmentListPresenter
-
+from ..participants.models import Appointment, AppointmentStatus
 from .models import Clinic
-from ..participants.models import Appointment
+from .presenters import AppointmentListPresenter, ClinicPresenter, ClinicsPresenter
 
 
 def clinic_list(request, filter="today"):
@@ -44,7 +42,6 @@ def clinic(request, id, filter="remaining"):
 @require_http_methods(["POST"])
 def check_in(_request, id, appointment_id):
     appointment = get_object_or_404(Appointment, pk=appointment_id)
-    appointment.status = Appointment.Status.CHECKED_IN
-    appointment.save()
+    appointment.statuses.create(state=AppointmentStatus.CHECKED_IN)
 
     return redirect("clinics:show", id=id)
