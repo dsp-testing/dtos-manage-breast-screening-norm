@@ -1,6 +1,21 @@
 version: 2
 
+multi-ecosystem-groups:
+  templates:
+    schedule:
+      interval: weekly
+
 updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    patterns: ['nhsuk-frontend']
+    multi-ecosystem-group: templates
+
+  - package-ecosystem: 'pip'
+    directory: '/'
+    patterns: ['nhsuk-frontend-jinja']
+    multi-ecosystem-group: templates
+
   - package-ecosystem: 'docker'
     directory: '/'
     schedule:
@@ -11,15 +26,81 @@ updates:
     schedule:
       interval: 'daily'
 
+    groups:
+      docker:
+        patterns:
+          - 'docker/*'
+
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'daily'
 
+    ignore:
+      # nhsuk-frontend needs to be updated in conjunction with nhsuk-frontend-jinja
+      - dependency-name: 'nhsuk-frontend'
+
+    groups:
+      build:
+        patterns:
+          - '@babel/*'
+          - '@rollup/*'
+          - 'rollup'
+          - 'rollup-*'
+          - 'sass-embedded'
+
+      lint:
+        patterns:
+          - '@typescript-eslint/*'
+          - 'eslint'
+          - 'eslint-*'
+          - 'prettier'
+          - 'typescript'
+
+      test:
+        patterns:
+          - '@testing-library/*'
+          - 'babel-jest'
+          - 'jest'
+          - 'jest-*'
+
+      tools:
+        patterns:
+          - 'concurrently'
+
   - package-ecosystem: 'pip'
     directory: '/'
     schedule:
       interval: 'daily'
+
+    ignore:
+      # nhsuk-frontend-jinja needs to be updated in conjunction with nhsuk-frontend
+      - dependency-name: nhsuk-frontend-jinja
+
+    groups:
+      frontend:
+        patterns:
+          - jinja2
+          - whitenoise
+
+      infra:
+        patterns:
+          - azure-identity
+          - gunicorn
+          - psycopg
+
+      lint_and_test:
+        patterns:
+          - factory-boy
+          - 'pytest*'
+          - '*playwright*'
+          - ruff
+          - time-machine
+
+      tools:
+        patterns:
+          - 'dotenv'
+          - 'ipdb'
 
   - package-ecosystem: 'terraform'
     directory: '/'
