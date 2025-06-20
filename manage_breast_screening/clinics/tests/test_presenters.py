@@ -1,15 +1,13 @@
+import uuid
 from datetime import datetime
 from unittest.mock import MagicMock
-import uuid
-import pytest
 
+import pytest
 from django.urls import reverse
 
-from manage_breast_screening.clinics.presenters import (
-    ClinicPresenter,
-    AppointmentListPresenter,
-)
-from manage_breast_screening.clinics.models import Clinic
+from ..models import Clinic
+from ..presenters import AppointmentListPresenter, ClinicPresenter
+from .factories import ClinicStatusFactory
 
 
 @pytest.fixture
@@ -26,6 +24,7 @@ def mock_clinic():
     }
     mock.get_type_display.return_value = "Screening"
     mock.get_risk_type_display.return_value = "Routine"
+    mock.current_status.return_value = ClinicStatusFactory.build()
 
     return mock
 
@@ -40,6 +39,10 @@ def test_clinic_presenter(mock_clinic):
     assert presenter.time_range == "9am to 3pm"
     assert presenter.type == "Screening"
     assert presenter.risk_type == "Routine"
+    assert presenter.state == {
+        "classes": "nhsuk-tag--blue",
+        "text": "Scheduled",
+    }
 
 
 class TestAppointmentListPresenter:

@@ -10,9 +10,10 @@ from manage_breast_screening.clinics import models
 from .factories import ClinicFactory
 
 
-def test_clinic_is_scheduled():
-    factory = ClinicFactory.build()
-    assert factory.state == models.Clinic.State.SCHEDULED
+@pytest.mark.django_db
+def test_clinic_current_status():
+    clinic = ClinicFactory.create(current_status=models.ClinicStatus.SCHEDULED)
+    assert clinic.current_status().state == models.ClinicStatus.SCHEDULED
 
 
 @pytest.mark.django_db
