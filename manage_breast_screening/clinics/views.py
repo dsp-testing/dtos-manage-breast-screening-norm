@@ -18,7 +18,7 @@ def clinic_list(request, filter="today"):
 
 
 def clinic(request, id, filter="remaining"):
-    clinic = Clinic.objects.prefetch_related("setting").get(id=id)
+    clinic = Clinic.objects.select_related("setting").get(id=id)
     presented_clinic = ClinicPresenter(clinic)
     appointments = (
         Appointment.objects.for_clinic_and_filter(clinic, filter)
