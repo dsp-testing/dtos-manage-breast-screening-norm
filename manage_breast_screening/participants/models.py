@@ -3,6 +3,8 @@ from datetime import date
 
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.db.models import OuterRef, Subquery
+from django.utils.functional import cached_property
 
 from ..core.models import BaseModel
 
@@ -115,26 +117,34 @@ class ScreeningEpisode(BaseModel):
 
 
 class AppointmentQuerySet(models.QuerySet):
-    def remaining(self):
+    def in_status(self, *statuses):
         return self.filter(
-            status__in=[
-                Appointment.Status.CONFIRMED,
-                Appointment.Status.CHECKED_IN,
-            ]
+            statuses=Subquery(
+                AppointmentStatus.objects.filter(
+                    appointment=OuterRef("pk"),
+                    state__in=statuses,
+                )
+                .values("pk")
+                .order_by("-created_at")[:1]
+            )
+        )
+
+    def remaining(self):
+        return self.in_status(
+            AppointmentStatus.CONFIRMED,
+            AppointmentStatus.CHECKED_IN,
         )
 
     def checked_in(self):
-        return self.filter(status=Appointment.Status.CHECKED_IN)
+        return self.in_status(AppointmentStatus.CHECKED_IN)
 
     def complete(self):
-        return self.filter(
-            status__in=[
-                Appointment.Status.CANCELLED,
-                Appointment.Status.DID_NOT_ATTEND,
-                Appointment.Status.SCREENED,
-                Appointment.Status.PARTIALLY_SCREENED,
-                Appointment.Status.ATTENDED_NOT_SCREENED,
-            ]
+        return self.in_status(
+            AppointmentStatus.CANCELLED,
+            AppointmentStatus.DID_NOT_ATTEND,
+            AppointmentStatus.SCREENED,
+            AppointmentStatus.PARTIALLY_SCREENED,
+            AppointmentStatus.ATTENDED_NOT_SCREENED,
         )
 
     def for_clinic_and_filter(self, clinic, filter):
@@ -158,25 +168,6 @@ class AppointmentQuerySet(models.QuerySet):
 
 
 class Appointment(BaseModel):
-    class Status:
-        CONFIRMED = "CONFIRMED"
-        CANCELLED = "CANCELLED"
-        DID_NOT_ATTEND = "DID_NOT_ATTEND"
-        CHECKED_IN = "CHECKED_IN"
-        SCREENED = "SCREENED"
-        PARTIALLY_SCREENED = "PARTIALLY_SCREENED"
-        ATTENDED_NOT_SCREENED = "ATTENDED_NOT_SCREENED"
-
-    STATUS_CHOICES = {
-        Status.CONFIRMED: "Confirmed",
-        Status.CANCELLED: "Cancelled",
-        Status.DID_NOT_ATTEND: "Did not attend",
-        Status.CHECKED_IN: "Checked in",
-        Status.SCREENED: "Screened",
-        Status.PARTIALLY_SCREENED: "Partially screened",
-        Status.ATTENDED_NOT_SCREENED: "Attended not screened",
-    }
-
     objects = AppointmentQuerySet.as_manager()
 
     screening_episode = models.ForeignKey(ScreeningEpisode, on_delete=models.PROTECT)
@@ -184,8 +175,36 @@ class Appointment(BaseModel):
         "clinics.ClinicSlot",
         on_delete=models.PROTECT,
     )
-    status = models.CharField(
-        choices=STATUS_CHOICES, max_length=50, default=Status.CONFIRMED
-    )
     reinvite = models.BooleanField(default=False)
     stopped_reasons = models.JSONField(null=True, blank=True)
+
+    @cached_property
+    def current_status(self):
+        return self.statuses.first()
+
+
+class AppointmentStatus(models.Model):
+    CONFIRMED = "CONFIRMED"
+    CANCELLED = "CANCELLED"
+    DID_NOT_ATTEND = "DID_NOT_ATTEND"
+    CHECKED_IN = "CHECKED_IN"
+    SCREENED = "SCREENED"
+    PARTIALLY_SCREENED = "PARTIALLY_SCREENED"
+    ATTENDED_NOT_SCREENED = "ATTENDED_NOT_SCREENED"
+
+    STATUS_CHOICES = {
+        CONFIRMED: "Confirmed",
+        CANCELLED: "Cancelled",
+        DID_NOT_ATTEND: "Did not attend",
+        CHECKED_IN: "Checked in",
+        SCREENED: "Screened",
+        PARTIALLY_SCREENED: "Partially screened",
+        ATTENDED_NOT_SCREENED: "Attended not screened",
+    }
+    state = models.CharField(choices=STATUS_CHOICES, max_length=50, default=CONFIRMED)
+
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    appointment = models.ForeignKey(
+        Appointment, on_delete=models.PROTECT, related_name="statuses"
+    )
