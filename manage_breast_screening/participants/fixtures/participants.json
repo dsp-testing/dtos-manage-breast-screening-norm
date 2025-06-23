@@ -252,6 +252,15 @@
   },
   {
     "model": "participants.appointmentstatus",
+    "pk": "a37d4db3-d936-42ed-a02b-8d18f63cb69e",
+    "fields": {
+      "state": "SCREENED",
+      "created_at": "2025-06-20T15:22:19.566Z",
+      "appointment": "b5acffaf-5140-4bcd-90a8-751fd6c6d2f5"
+    }
+  },
+  {
+    "model": "participants.appointmentstatus",
     "pk": "05b88f6b-c6d3-4835-b36d-950a8af6070c",
     "fields": {
       "state": "DID_NOT_ATTEND",
