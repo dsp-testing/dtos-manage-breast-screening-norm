@@ -13,7 +13,7 @@ from .factories import ClinicFactory
 @pytest.mark.django_db
 def test_clinic_current_status():
     clinic = ClinicFactory.create(current_status=models.ClinicStatus.SCHEDULED)
-    assert clinic.current_status().state == models.ClinicStatus.SCHEDULED
+    assert clinic.current_status.state == models.ClinicStatus.SCHEDULED
 
 
 @pytest.mark.django_db

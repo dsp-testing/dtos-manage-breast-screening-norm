@@ -44,7 +44,7 @@ class ClinicPresenter:
 
     @property
     def state(self):
-        status = self._clinic.current_status()
+        status = self._clinic.current_status
         value = status.state
         text = status.get_state_display()
 
