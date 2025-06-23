@@ -42,9 +42,9 @@ def present_secondary_nav(id):
 
 
 class AppointmentPresenter:
-    def __init__(self, appointment):
+    def __init__(self, appointment, last_known_screening=None):
         self._appointment = appointment
-        self._last_known_screening = appointment.screening_episode.previous()
+        self._last_known_screening = last_known_screening
 
         self.allStatuses = AppointmentStatus
         self.id = appointment.id
