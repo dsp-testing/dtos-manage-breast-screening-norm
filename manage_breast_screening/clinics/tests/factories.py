@@ -37,6 +37,7 @@ class ClinicFactory(DjangoModelFactory):
     class Meta:
         model = models.Clinic
         django_get_or_create = ("starts_at", "ends_at")
+        skip_postgeneration_save = True
 
     type = FuzzyChoice(models.Clinic.TYPE_CHOICES)
     risk_type = FuzzyChoice(models.Clinic.RISK_TYPE_CHOICES)

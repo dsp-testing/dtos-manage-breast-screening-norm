@@ -54,6 +54,7 @@ class AppointmentStatusFactory(DjangoModelFactory):
 class AppointmentFactory(DjangoModelFactory):
     class Meta:
         model = models.Appointment
+        skip_postgeneration_save = True
 
     clinic_slot = SubFactory(ClinicSlotFactory)
     screening_episode = SubFactory(ScreeningEpisodeFactory)
