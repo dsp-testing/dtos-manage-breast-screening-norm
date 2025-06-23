@@ -10,6 +10,12 @@ STORAGES = {
     },
 }
 
+
 MIDDLEWARE.remove(
     "whitenoise.middleware.WhiteNoiseMiddleware",
 )
+
+if DEBUG:
+    INSTALLED_APPS.remove("debug_toolbar")
+    MIDDLEWARE.remove("debug_toolbar.middleware.DebugToolbarMiddleware")
+    DEBUG_TOOLBAR = False

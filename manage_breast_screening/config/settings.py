@@ -74,6 +74,14 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+if DEBUG:
+    INTERNAL_IPS = ["127.0.0.1"]
+
+DEBUG_TOOLBAR = DEBUG
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS.append("debug_toolbar")
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+
 ROOT_URLCONF = "manage_breast_screening.core.urls"
 
 TEMPLATES = [
