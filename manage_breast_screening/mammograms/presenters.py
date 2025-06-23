@@ -64,6 +64,7 @@ class AppointmentPresenter:
     @property
     def current_status(self):
         current_status = self._appointment.current_status
+
         colour = status_colour(current_status.state)
 
         return {

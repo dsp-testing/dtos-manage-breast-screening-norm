@@ -22,6 +22,7 @@ def clinic(request, id, filter="remaining"):
     presented_clinic = ClinicPresenter(clinic)
     appointments = (
         Appointment.objects.for_clinic_and_filter(clinic, filter)
+        .prefetch_related("statuses")
         .select_related("clinic_slot__clinic", "screening_episode__participant")
         .order_by("clinic_slot__starts_at")
     )
