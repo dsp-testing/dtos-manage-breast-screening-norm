@@ -15,7 +15,7 @@ def show(request, pk):
 
     return render(
         request,
-        "show.jinja",
+        "participants/show.jinja",
         context={
             "participant": presenter,
             "heading": participant.full_name,

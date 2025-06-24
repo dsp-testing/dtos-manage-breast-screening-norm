@@ -12,7 +12,7 @@ def clinic_list(request, filter="today"):
     presenter = ClinicsPresenter(clinics, filter, counts_by_filter)
     return render(
         request,
-        "index.jinja",
+        "clinics/index.jinja",
         context={"presenter": presenter},
     )
 
@@ -31,7 +31,7 @@ def clinic(request, id, filter="remaining"):
     )
     return render(
         request,
-        "show.jinja",
+        "clinics/show.jinja",
         context={
             "presented_clinic": presented_clinic,
             "presented_appointment_list": presented_appointment_list,
