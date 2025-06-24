@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from django.urls import reverse
 
 from ..core.utils.date_formatting import format_date, format_time_range
@@ -12,7 +14,7 @@ class ClinicsPresenter:
         self.counts_by_filter = counts_by_filter
         self.filter = filter
 
-    @property
+    @cached_property
     def heading(self):
         if self.filter == "today":
             return "Today’s clinics"
@@ -42,7 +44,7 @@ class ClinicPresenter:
         self.type = clinic.get_type_display()
         self.risk_type = clinic.get_risk_type_display()
 
-    @property
+    @cached_property
     def state(self):
         status = self._clinic.current_status
         value = status.state
@@ -53,7 +55,7 @@ class ClinicPresenter:
             "classes": "nhsuk-tag--" + self.STATUS_COLORS[value],
         }
 
-    @property
+    @cached_property
     def setting_name(self):
         return self._clinic.setting.name
 
@@ -67,7 +69,7 @@ class AppointmentListPresenter:
         self.counts_by_filter = counts_by_filter
         self.clinic_id = clinic_id
 
-    @property
+    @cached_property
     def secondary_nav_data(self):
         filters = [
             {
