@@ -36,7 +36,7 @@ class BaseAppointmentForm(FormView):
 
 
 class StartScreening(BaseAppointmentForm):
-    template_name = "start_screening.jinja"
+    template_name = "mammograms/start_screening.jinja"
     form_class = ScreeningAppointmentForm
 
     def get_context_data(self, **kwargs):
@@ -79,7 +79,7 @@ class StartScreening(BaseAppointmentForm):
 
 
 class AskForMedicalInformation(BaseAppointmentForm):
-    template_name = "ask_for_medical_information.jinja"
+    template_name = "mammograms/ask_for_medical_information.jinja"
     form_class = AskForMedicalInformationForm
 
     def get_context_data(self, **kwargs):
@@ -117,7 +117,7 @@ class AskForMedicalInformation(BaseAppointmentForm):
 
 
 class RecordMedicalInformation(BaseAppointmentForm):
-    template_name = "record_medical_information.jinja"
+    template_name = "mammograms/record_medical_information.jinja"
     form_class = RecordMedicalInformationForm
 
     def get_context_data(self, **kwargs):
@@ -161,7 +161,7 @@ def appointment_cannot_go_ahead(request, id):
 
     return render(
         request,
-        "appointment_cannot_go_ahead.jinja",
+        "mammograms/appointment_cannot_go_ahead.jinja",
         {
             "title": "Appointment cannot go ahead",
             "caption": participant.full_name,
@@ -174,7 +174,7 @@ def appointment_cannot_go_ahead(request, id):
 def awaiting_images(request, id):
     return render(
         request,
-        "awaiting_images.jinja",
+        "mammograms/awaiting_images.jinja",
         {"title": "Awaiting images"},
     )
 
