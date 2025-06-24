@@ -167,3 +167,14 @@ class TestAppointment:
         assert counts["checked_in"] == 1
         assert counts["complete"] == 2
         assert counts["all"] == 5
+
+
+@pytest.mark.django_db
+def test_appointment_current_status():
+    appointment = AppointmentFactory.create(
+        current_status=models.AppointmentStatus.CONFIRMED
+    )
+    appointment.statuses.create(state=models.AppointmentStatus.CHECKED_IN)
+
+    assert appointment.statuses.first().state == models.AppointmentStatus.CHECKED_IN
+    assert appointment.current_status.state == models.AppointmentStatus.CHECKED_IN

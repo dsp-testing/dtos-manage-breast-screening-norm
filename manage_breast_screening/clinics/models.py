@@ -1,7 +1,6 @@
 import uuid
 from datetime import date
 from enum import StrEnum
-from functools import cached_property
 
 from django.db import models
 
@@ -98,7 +97,7 @@ class Clinic(BaseModel):
 
     objects = ClinicQuerySet.as_manager()
 
-    @cached_property
+    @property
     def current_status(self):
         return self.statuses.first()
 

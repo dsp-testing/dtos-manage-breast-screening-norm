@@ -5,7 +5,6 @@ from logging import getLogger
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models import OuterRef, Subquery
-from django.utils.functional import cached_property
 
 from ..core.models import BaseModel
 
@@ -181,7 +180,7 @@ class Appointment(BaseModel):
     reinvite = models.BooleanField(default=False)
     stopped_reasons = models.JSONField(null=True, blank=True)
 
-    @cached_property
+    @property
     def current_status(self) -> "AppointmentStatus":
         """
         Fetch the most recent status associated with this appointment.
@@ -226,3 +225,6 @@ class AppointmentStatus(models.Model):
     appointment = models.ForeignKey(
         Appointment, on_delete=models.PROTECT, related_name="statuses"
     )
+
+    class Meta:
+        ordering = ["-created_at"]
