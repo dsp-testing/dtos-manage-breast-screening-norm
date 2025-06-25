@@ -72,9 +72,9 @@ class TestAppointmentPresenter:
     def test_last_known_screening(self, mock_appointment):
         mock_screening = MagicMock(spec=ScreeningEpisode)
         mock_screening.created_at = datetime(2015, 1, 1)
-        mock_appointment.screening_episode.previous.return_value = mock_screening
+        last_known_screening = mock_screening
 
-        result = AppointmentPresenter(mock_appointment)
+        result = AppointmentPresenter(mock_appointment, last_known_screening)
 
         assert result.last_known_screening == {
             "date": "1 January 2015",

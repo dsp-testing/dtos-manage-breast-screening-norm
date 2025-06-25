@@ -43,7 +43,8 @@ class StartScreening(BaseAppointmentForm):
         context = super().get_context_data(**kwargs)
 
         appointment = self.get_appointment()
-        presenter = AppointmentPresenter(appointment)
+        last_known_screening = appointment.screening_episode.previous()
+        presenter = AppointmentPresenter(appointment, last_known_screening)
 
         context.update(
             {

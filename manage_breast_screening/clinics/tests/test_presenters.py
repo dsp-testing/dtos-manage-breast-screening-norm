@@ -24,7 +24,7 @@ def mock_clinic():
     }
     mock.get_type_display.return_value = "Screening"
     mock.get_risk_type_display.return_value = "Routine"
-    mock.current_status.return_value = ClinicStatusFactory.build()
+    mock.current_status = ClinicStatusFactory.build()
 
     return mock
 

@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from django.urls import reverse
 
 from ..core.utils.date_formatting import format_date, format_relative_date, format_time
@@ -42,9 +44,9 @@ def present_secondary_nav(id):
 
 
 class AppointmentPresenter:
-    def __init__(self, appointment):
+    def __init__(self, appointment, last_known_screening=None):
         self._appointment = appointment
-        self._last_known_screening = appointment.screening_episode.previous()
+        self._last_known_screening = last_known_screening
 
         self.allStatuses = AppointmentStatus
         self.id = appointment.id
@@ -53,17 +55,18 @@ class AppointmentPresenter:
             appointment.screening_episode.participant
         )
 
-    @property
+    @cached_property
     def participant_url(self):
         return self.participant.url
 
-    @property
+    @cached_property
     def start_time(self):
         return self.clinic_slot.starts_at
 
-    @property
+    @cached_property
     def current_status(self):
         current_status = self._appointment.current_status
+
         colour = status_colour(current_status.state)
 
         return {
@@ -73,7 +76,7 @@ class AppointmentPresenter:
             "is_confirmed": current_status.state == AppointmentStatus.CONFIRMED,
         }
 
-    @property
+    @cached_property
     def last_known_screening(self):
         return (
             {
@@ -98,17 +101,17 @@ class ClinicSlotPresenter:
 
         self.clinic_id = self._clinic.id
 
-    @property
+    @cached_property
     def clinic_type(self):
         return self._clinic.get_type_display().capitalize()
 
-    @property
+    @cached_property
     def slot_time_and_clinic_date(self):
         clinic_slot = self._clinic_slot
         clinic = self._clinic
 
         return f"{format_time(clinic_slot.starts_at)} ({clinic_slot.duration_in_minutes} minutes) - {format_date(clinic.starts_at)} ({format_relative_date(clinic.starts_at)})"
 
-    @property
+    @cached_property
     def starts_at(self):
         return format_time(self._clinic_slot.starts_at)

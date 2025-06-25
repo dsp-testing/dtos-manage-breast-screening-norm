@@ -1,12 +1,14 @@
 import uuid
 from datetime import date
+from logging import getLogger
 
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models import OuterRef, Subquery
-from django.utils.functional import cached_property
 
 from ..core.models import BaseModel
+
+logger = getLogger(__name__)
 
 # List of ethnic groups from
 # https://design-system.service.gov.uk/patterns/equality-information/
@@ -178,9 +180,24 @@ class Appointment(BaseModel):
     reinvite = models.BooleanField(default=False)
     stopped_reasons = models.JSONField(null=True, blank=True)
 
-    @cached_property
-    def current_status(self):
-        return self.statuses.first()
+    @property
+    def current_status(self) -> "AppointmentStatus":
+        """
+        Fetch the most recent status associated with this appointment.
+        If there are no statuses for any reason, assume the default one.
+        """
+        # avoid `first()` here so that `statuses` can be prefetched
+        # when fetching many appointments
+        statuses = list(self.statuses.order_by("-created_at").all())
+
+        if not statuses:
+            status = AppointmentStatus()
+            logger.info(
+                f"Appointment {self.pk} has no statuses. Assuming {status.state}"
+            )
+            return status
+
+        return statuses[0]
 
 
 class AppointmentStatus(models.Model):
@@ -208,3 +225,6 @@ class AppointmentStatus(models.Model):
     appointment = models.ForeignKey(
         Appointment, on_delete=models.PROTECT, related_name="statuses"
     )
+
+    class Meta:
+        ordering = ["-created_at"]

@@ -97,8 +97,9 @@ class Clinic(BaseModel):
 
     objects = ClinicQuerySet.as_manager()
 
+    @property
     def current_status(self):
-        return self.statuses.first()
+        return self.statuses.order_by("-created_at").first()
 
     def session_type(self):
         start_hour = self.starts_at.hour

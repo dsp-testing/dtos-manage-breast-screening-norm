@@ -30,6 +30,7 @@ pytest-playwright = "^0.7.0"
 ipdb = "^0.13.13"
 axe-playwright-python = "^0.1.5"
 ruff = "^0.12.0"
+django-debug-toolbar = "^5.2.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -46,4 +47,4 @@ markers = ["system: mark a test as a system test"]
 exclude = ["*/migrations/*.py"]
 
 # On top of the defaults (`E4`, E7`, `E9`, and `F`), enable isort (`I`)
-select = ["E4", "E7", "E9", "F", "I"]
+lint.select = ["E4", "E7", "E9", "F", "I"]
