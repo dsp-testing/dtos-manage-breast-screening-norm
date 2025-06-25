@@ -49,6 +49,16 @@ Session {
     TextField session_data
     DateTimeField expire_date
 }
+AuditLog {
+    UUIDField id
+    DateTimeField created_at
+    ForeignKey content_type
+    UUIDField object_id
+    CharField operation
+    JSONField snapshot
+    ForeignKey actor
+    CharField system_update_id
+}
 Provider {
     UUIDField id
     DateTimeField created_at
@@ -71,7 +81,6 @@ Clinic {
     DateTimeField ends_at
     CharField type
     CharField risk_type
-    CharField state
 }
 ClinicSlot {
     UUIDField id
@@ -80,6 +89,12 @@ ClinicSlot {
     ForeignKey clinic
     DateTimeField starts_at
     IntegerField duration_in_minutes
+}
+ClinicStatus {
+    UUIDField id
+    DateTimeField created_at
+    CharField state
+    ForeignKey clinic
 }
 Participant {
     UUIDField id
@@ -114,9 +129,14 @@ Appointment {
     DateTimeField updated_at
     ForeignKey screening_episode
     ForeignKey clinic_slot
-    CharField status
     BooleanField reinvite
     JSONField stopped_reasons
+}
+AppointmentStatus {
+    CharField state
+    UUIDField id
+    DateTimeField created_at
+    ForeignKey appointment
 }
 LogEntry }|--|| User : user
 LogEntry }|--|| ContentType : content_type
@@ -124,11 +144,15 @@ Permission }|--|| ContentType : content_type
 Group }|--|{ Permission : permissions
 User }|--|{ Group : groups
 User }|--|{ Permission : user_permissions
+AuditLog }|--|| ContentType : content_type
+AuditLog }|--|| User : actor
 Setting }|--|| Provider : provider
 Clinic }|--|| Setting : setting
 ClinicSlot }|--|| Clinic : clinic
+ClinicStatus }|--|| Clinic : clinic
 ParticipantAddress ||--|| Participant : participant
 ScreeningEpisode }|--|| Participant : participant
 Appointment }|--|| ScreeningEpisode : screening_episode
 Appointment }|--|| ClinicSlot : clinic_slot
+AppointmentStatus }|--|| Appointment : appointment
 ```
