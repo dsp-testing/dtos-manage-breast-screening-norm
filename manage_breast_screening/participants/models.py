@@ -188,7 +188,7 @@ class Appointment(BaseModel):
         """
         # avoid `first()` here so that `statuses` can be prefetched
         # when fetching many appointments
-        statuses = list(self.statuses.all())
+        statuses = list(self.statuses.order_by("-created_at").all())
 
         if not statuses:
             status = AppointmentStatus()
