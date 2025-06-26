@@ -82,7 +82,7 @@ module "container_app_subnet" {
   network_security_group_name                                    = "nsg-container-apps"
   delegation_name                                                = "delegation"
   service_delegation_name                                        = "Microsoft.App/environments"
-  service_delegation_actions                                     = ["Microsoft.Network/virtualNetworks/subnets/action"]
+  service_delegation_actions                                     = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
 }
 
 module "main_subnet" {
