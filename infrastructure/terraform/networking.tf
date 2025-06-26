@@ -80,6 +80,23 @@ module "container_app_subnet" {
   monitor_diagnostic_setting_network_security_group_enabled_logs = []
   log_analytics_workspace_id                                     = module.log_analytics_workspace_audit.id
   network_security_group_name                                    = "nsg-container-apps"
+  delegation_name                                                = "delegation"
+  service_delegation_name                                        = "Microsoft.App/environments"
+  service_delegation_actions                                     = ["Microsoft.Network/virtualNetworks/subnets/action"]
+}
+
+module "main_subnet" {
+  source = "../modules/dtos-devops-templates/infrastructure/modules/subnet"
+
+  name                                                           = "snet-main"
+  resource_group_name                                            = azurerm_resource_group.main.name
+  vnet_name                                                      = module.main_vnet.name
+  address_prefixes                                               = [cidrsubnet(var.vnet_address_space, 7, 2)]
+  create_nsg                                                     = false
+  location                                                       = "UK South"
+  monitor_diagnostic_setting_network_security_group_enabled_logs = []
+  log_analytics_workspace_id                                     = module.log_analytics_workspace_audit.id
+  network_security_group_name                                    = "nsg-container-apps"
 }
 
 data "azurerm_private_dns_zone" "key-vault" {
