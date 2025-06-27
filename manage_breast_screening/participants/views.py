@@ -41,7 +41,7 @@ def show(request, id):
 
 
 def edit_ethnicity(request, id):
-    participant = get_object_or_404(Participant, id=id)
+    participant = get_object_or_404(Participant, pk=id)
 
     if request.method == "POST":
         return_url = request.POST.get("return_url")
@@ -54,7 +54,7 @@ def edit_ethnicity(request, id):
         form = EthnicityForm(participant=participant)
 
     return_url = return_url or reverse(
-        "participants:show", kwargs={"id": participant.id}
+        "participants:show", kwargs={"id": participant.pk}
     )
 
     return render(
