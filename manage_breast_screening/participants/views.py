@@ -10,8 +10,8 @@ from .presenters import ParticipantAppointmentsPresenter, ParticipantPresenter
 logger = getLogger(__name__)
 
 
-def show(request, pk):
-    participant = get_object_or_404(Participant, pk=pk)
+def show(request, id):
+    participant = get_object_or_404(Participant, pk=id)
     presented_participant = ParticipantPresenter(participant)
 
     appointments = (
