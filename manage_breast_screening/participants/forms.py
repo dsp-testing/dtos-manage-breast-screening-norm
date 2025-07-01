@@ -5,7 +5,7 @@ from .models import Ethnicity
 
 class EthnicityForm(forms.Form):
     ethnic_background_choice = forms.ChoiceField(
-        choices=Ethnicity.ethnic_backgrounds_with_display_names(),
+        choices=Ethnicity.ethnic_background_ids_with_display_names(),
         required=True,
         error_messages={"required": "Select an ethnic background"},
     )

@@ -11,10 +11,19 @@ from ..core.models import BaseModel
 logger = getLogger(__name__)
 
 
-# List of ethnic groups from
-# https://design-system.service.gov.uk/patterns/equality-information/
-# This list is specific to England.
 class Ethnicity:
+    """
+    This class contains structured ethnicity data along with methods for retrieval and querying of
+    the dataset.
+
+    List of ethnic groups from
+    https://design-system.service.gov.uk/patterns/equality-information/
+    This list is specific to England.
+
+    The ids are stored in the database and should not be changed without an accompanying data
+    migration.
+    """
+
     # fmt: off
     DATA = {
         "White": [
@@ -49,18 +58,8 @@ class Ethnicity:
     }
     # fmt: on
 
-    @classmethod
-    def ethnic_backgrounds_with_display_names(cls):
-        choices = []
-        for _ethnic_category, ethnic_backgrounds in cls.DATA.items():
-            for ethnic_background in ethnic_backgrounds:
-                choices.append(
-                    (ethnic_background["id"], ethnic_background["display_name"])
-                )
-        return tuple(choices)
-
-    @classmethod
-    def non_specific_ethnic_backgrounds(cls):
+    @staticmethod
+    def non_specific_ethnic_backgrounds():
         return [
             "any_other_white_background",
             "any_other_mixed_or_multiple_ethnic_background",
@@ -70,7 +69,21 @@ class Ethnicity:
         ]
 
     @classmethod
+    def ethnic_background_ids_with_display_names(cls):
+        """
+        Returns a list of tuples containing the id and display name for each ethnic background.
+        """
+        choices = []
+        for ethnic_backgrounds in cls.DATA.values():
+            for background in ethnic_backgrounds:
+                choices.append((background["id"], background["display_name"]))
+        return tuple(choices)
+
+    @classmethod
     def ethnic_category(cls, ethnic_background_id: str):
+        """
+        Returns the top-level ethnic category for the given ethnic background id.
+        """
         for category, ethnic_backgrounds in cls.DATA.items():
             for background in ethnic_backgrounds:
                 if ethnic_background_id == background["id"]:
@@ -79,6 +92,9 @@ class Ethnicity:
 
     @classmethod
     def ethnic_background_display_name(cls, ethnic_background_id: str):
+        """
+        Returns the display name for the given ethnic background id.
+        """
         for _, ethnic_backgrounds in cls.DATA.items():
             for background in ethnic_backgrounds:
                 if ethnic_background_id == background["id"]:
@@ -88,7 +104,7 @@ class Ethnicity:
 
 class Participant(BaseModel):
     PREFER_NOT_TO_SAY = "Prefer not to say"
-    ETHNIC_BACKGROUND_CHOICES = Ethnicity.ethnic_backgrounds_with_display_names()
+    ETHNIC_BACKGROUND_CHOICES = Ethnicity.ethnic_background_ids_with_display_names()
 
     first_name = models.TextField()
     last_name = models.TextField()
