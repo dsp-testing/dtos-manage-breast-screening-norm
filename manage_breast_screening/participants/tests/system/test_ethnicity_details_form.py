@@ -38,7 +38,7 @@ class TestEthnicityDetailsForm(SystemTestCase):
         self.when_i_choose_a_non_specific_ethnicity()
         self.and_i_submit_the_form()
         self.then_i_should_be_back_on_the_appointment()
-        self.and_the_ethnicity_is_updated_to("White (any other)")
+        self.and_the_ethnicity_is_updated_to("White (any other White background)")
 
         self.when_i_click_the_change_ethnicity_link()
         self.and_i_prefer_not_to_say()

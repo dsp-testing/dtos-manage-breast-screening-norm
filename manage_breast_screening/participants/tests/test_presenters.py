@@ -59,13 +59,28 @@ class TestParticipantPresenter:
         assert result.url == f"/participants/{participant.pk}/"
 
     @pytest.mark.parametrize(
-        "background_id", Ethnicity.non_specific_ethnic_backgrounds()
+        "background_id,expected_display",
+        [
+            ("any_other_white_background", "any other White background"),
+            (
+                "any_other_mixed_or_multiple_ethnic_background",
+                "any other mixed or multiple ethnic background",
+            ),
+            ("any_other_asian_background", "any other Asian background"),
+            (
+                "any_other_black_african_or_caribbean_background",
+                "any other Black, African or Caribbean background",
+            ),
+            ("any_other_ethnic_background", "any other ethnic group"),
+        ],
     )
-    def test_any_other_ethnic_background(self, participant, background_id):
+    def test_any_other_ethnic_background(
+        self, participant, background_id, expected_display
+    ):
         participant.ethnic_background_id = background_id
         result = ParticipantPresenter(participant)
 
-        assert result.ethnic_background == "any other"
+        assert result.ethnic_background == expected_display
 
     @pytest.mark.parametrize(
         "return_url,expected_url",

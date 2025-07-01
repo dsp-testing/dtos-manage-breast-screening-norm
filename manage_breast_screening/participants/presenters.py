@@ -3,8 +3,6 @@ from typing import Any
 
 from django.urls import reverse
 
-from manage_breast_screening.participants.models import Ethnicity
-
 from ..core.utils.date_formatting import format_date, format_relative_date
 from ..core.utils.string_formatting import (
     format_age,
@@ -70,11 +68,12 @@ class ParticipantPresenter:
 
     @property
     def ethnic_background(self):
-        stored_value = self._participant.ethnic_background_id
-        if stored_value in Ethnicity.non_specific_ethnic_backgrounds():
-            return "any other"
-        else:
-            return self._participant.ethnic_background
+        background = self._participant.ethnic_background
+
+        if background and background.startswith("Any other"):
+            return background[0].lower() + background[1:]
+
+        return background
 
 
 class ScreeningHistoryPresenter:
