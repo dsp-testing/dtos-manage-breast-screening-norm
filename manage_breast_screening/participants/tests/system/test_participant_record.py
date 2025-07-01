@@ -24,7 +24,7 @@ class TestParticipantRecord(SystemTestCase):
 
     @pytest.mark.skip("not implemented yet")
     def test_viewing_participant_record_from_an_appointment(self):
-        self.given_i_have_an_upcoming_appointment()
+        self.given_the_participant_has_an_upcoming_appointment()
         self.given_i_am_viewing_the_upcoming_appointment()
         self.when_i_click_on_view_participant_record()
         self.then_i_should_be_on_the_participant_record_page()
@@ -37,7 +37,7 @@ class TestParticipantRecord(SystemTestCase):
         self.then_the_accessibility_baseline_is_met()
 
     def test_viewing_upcoming_appointments(self):
-        self.given_i_have_an_upcoming_appointment()
+        self.given_the_participant_has_an_upcoming_appointment()
         self.and_i_am_on_the_participant_record_page()
         self.then_i_should_see_the_upcoming_appointment()
         self.when_i_click_on_the_upcoming_appointment()
@@ -50,7 +50,7 @@ class TestParticipantRecord(SystemTestCase):
         self.when_i_click_on_a_past_appointment()
         self.then_i_should_be_on_the_past_appointment_page()
 
-    def given_i_have_an_upcoming_appointment(self):
+    def given_the_participant_has_an_upcoming_appointment(self):
         clinic_slot = ClinicSlotFactory(
             starts_at=datetime(2025, 1, 2, 11, tzinfo=tz.utc)
         )
