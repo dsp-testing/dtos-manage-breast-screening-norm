@@ -14,6 +14,12 @@ class EthnicityForm(forms.Form):
         if "participant" not in kwargs:
             raise ValueError("EthnicityForm requires a participant")
         self.participant = kwargs.pop("participant")
+
+        # Set initial value for ethnic_background_choice from participant
+        initial = kwargs.get("initial", {})
+        initial["ethnic_background_choice"] = self.participant.ethnic_background_id
+        kwargs["initial"] = initial
+
         super().__init__(*args, **kwargs)
 
         for ethnic_background in self.non_specific_ethnic_backgrounds():
