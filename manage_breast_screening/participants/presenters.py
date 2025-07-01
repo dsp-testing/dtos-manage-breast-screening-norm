@@ -52,6 +52,14 @@ class ParticipantPresenter:
         self.risk_level = sentence_case(participant.risk_level)
         self.url = reverse("participants:show", kwargs={"id": participant.pk})
 
+    def ethnicity_url(self, return_url):
+        url = reverse(
+            "participants:edit_ethnicity", kwargs={"id": self._participant.pk}
+        )
+        if return_url:
+            url += "?return_url=" + return_url
+        return url
+
     @property
     def address(self):
         address = self._participant.address

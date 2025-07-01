@@ -1,6 +1,5 @@
 from datetime import date, datetime
 from datetime import timezone as tz
-
 from unittest.mock import MagicMock
 from uuid import UUID, uuid4
 
@@ -10,8 +9,8 @@ from manage_breast_screening.participants.presenters import (
     ParticipantAppointmentsPresenter,
     ParticipantPresenter,
 )
-from ..models import Appointment, AppointmentStatus, Participant
-from manage_breast_screening.participants.models import Ethnicity
+
+from ..models import Appointment, AppointmentStatus
 from .factories import ParticipantAddressFactory, ParticipantFactory
 
 
@@ -57,7 +56,7 @@ class TestParticipantPresenter:
         assert result.date_of_birth == "1 January 1955"
         assert result.age == "70 years old"
         assert result.risk_level == ""
-        assert result.url == f"/participants/{mock_participant.pk}/"
+        assert result.url == f"/participants/{participant.pk}/"
 
     @pytest.mark.parametrize(
         "background_id", Ethnicity.non_specific_ethnic_backgrounds()
@@ -67,6 +66,25 @@ class TestParticipantPresenter:
         result = ParticipantPresenter(participant)
 
         assert result.ethnic_background == "any other"
+
+    @pytest.mark.parametrize(
+        "return_url,expected_url",
+        [
+            (None, "/participants/{uuid}/edit-ethnicity"),
+            ("", "/participants/{uuid}/edit-ethnicity"),
+            (
+                "/return/path/",
+                "/participants/{uuid}/edit-ethnicity?return_url=/return/path/",
+            ),
+        ],
+    )
+    def test_ethnicity_url(self, participant, return_url, expected_url):
+        presenter = ParticipantPresenter(participant)
+        expected = expected_url.replace("{uuid}", str(participant.pk))
+
+        result = presenter.ethnicity_url(return_url)
+
+        assert result == expected
 
 
 class TestParticipantAppointmentPresenter:
