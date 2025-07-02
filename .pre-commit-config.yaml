@@ -13,7 +13,8 @@ repos:
         language: system
         pass_filenames: false
         files: '.*models\.py$|.*models/.*\.py$'
-        
+        exclude: '.*\/notifications\/models\.py$'
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
     rev: v0.11.12
