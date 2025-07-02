@@ -61,6 +61,8 @@ class TestParticipantPresenter:
     @pytest.mark.parametrize(
         "background_id,expected_display",
         [
+            (None, None),
+            ("caribbean", "Caribbean"),
             ("any_other_white_background", "any other White background"),
             (
                 "any_other_mixed_or_multiple_ethnic_background",
@@ -74,9 +76,7 @@ class TestParticipantPresenter:
             ("any_other_ethnic_background", "any other ethnic group"),
         ],
     )
-    def test_any_other_ethnic_background(
-        self, participant, background_id, expected_display
-    ):
+    def test_ethnic_background(self, participant, background_id, expected_display):
         participant.ethnic_background_id = background_id
         result = ParticipantPresenter(participant)
 
