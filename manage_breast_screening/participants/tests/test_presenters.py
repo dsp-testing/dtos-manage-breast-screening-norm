@@ -10,7 +10,8 @@ from manage_breast_screening.participants.presenters import (
     ParticipantPresenter,
 )
 
-from ..models import Appointment, AppointmentStatus, Participant
+from ..models import Appointment, AppointmentStatus
+from .factories import ParticipantAddressFactory, ParticipantFactory
 
 
 class TestParticipantPresenter:
@@ -19,55 +20,86 @@ class TestParticipantPresenter:
         time_machine.move_to(datetime(2025, 1, 1, tzinfo=tz.utc))
 
     @pytest.fixture
-    def mock_participant(self):
-        mock = MagicMock(spec=Participant)
-        mock.nhs_number = "99900900829"
-        mock.pk = uuid4()
-        return mock
+    def participant(self):
+        participant_id = uuid4()
+        participant = ParticipantFactory.build(
+            pk=participant_id,
+            nhs_number="99900900829",
+            ethnic_background_id="irish",
+            first_name="Firstname",
+            last_name="Lastname",
+            gender="Female",
+            email="Firstname.Lastname@example.com",
+            phone="07700 900000",
+            date_of_birth=date(1955, 1, 1),
+            risk_level=None,
+            extra_needs=None,
+        )
+        participant.address = ParticipantAddressFactory.build(
+            participant=participant, lines=["1", "2", "3"], postcode="A123 "
+        )
 
-    @pytest.mark.parametrize(
-        "category, formatted",
-        [
-            (
-                "Black, African, Caribbean or Black British",
-                "Black, African, Caribbean or Black British",
-            ),
-            (None, None),
-            ("Any other", "any other"),
-        ],
-    )
-    def test_ethnic_group_category(self, mock_participant, category, formatted):
-        mock_participant.ethnic_group_category.return_value = category
-        result = ParticipantPresenter(mock_participant)
-        assert result.ethnic_group_category == formatted
+        return participant
 
-    def test_presented_values(self, mock_participant):
-        mock_participant.extra_needs = None
-        mock_participant.ethnic_group = "Irish"
-        mock_participant.full_name = "Firstname Lastname"
-        mock_participant.gender = "Female"
-        mock_participant.email = "Firstname.Lastname@example.com"
-        mock_participant.address.lines = ["1", "2", "3"]
-        mock_participant.address.postcode = ["A123 "]
-        mock_participant.phone = "07700 900000"
-        mock_participant.date_of_birth = date(1955, 1, 1)
-        mock_participant.age.return_value = 70
-        mock_participant.risk_level = None
-
-        result = ParticipantPresenter(mock_participant)
+    def test_presented_values(self, participant):
+        result = ParticipantPresenter(participant)
 
         assert result.extra_needs is None
-        assert result.ethnic_group == "Irish"
+        assert result.ethnic_background == "Irish"
+        assert result.ethnic_category == "White"
         assert result.full_name == "Firstname Lastname"
         assert result.gender == "Female"
         assert result.email == "Firstname.Lastname@example.com"
-        assert result.address == {"lines": ["1", "2", "3"], "postcode": ["A123 "]}
+        assert result.address == {"lines": ["1", "2", "3"], "postcode": "A123 "}
         assert result.phone == "07700 900000"
         assert result.nhs_number == "999 009 00829"
         assert result.date_of_birth == "1 January 1955"
         assert result.age == "70 years old"
         assert result.risk_level == ""
-        assert result.url == f"/participants/{mock_participant.pk}/"
+        assert result.url == f"/participants/{participant.pk}/"
+
+    @pytest.mark.parametrize(
+        "background_id,expected_display",
+        [
+            (None, None),
+            ("caribbean", "Caribbean"),
+            ("any_other_white_background", "any other White background"),
+            (
+                "any_other_mixed_or_multiple_ethnic_background",
+                "any other mixed or multiple ethnic background",
+            ),
+            ("any_other_asian_background", "any other Asian background"),
+            (
+                "any_other_black_african_or_caribbean_background",
+                "any other Black, African or Caribbean background",
+            ),
+            ("any_other_ethnic_background", "any other ethnic group"),
+        ],
+    )
+    def test_ethnic_background(self, participant, background_id, expected_display):
+        participant.ethnic_background_id = background_id
+        result = ParticipantPresenter(participant)
+
+        assert result.ethnic_background == expected_display
+
+    @pytest.mark.parametrize(
+        "return_url,expected_url",
+        [
+            (None, "/participants/{uuid}/edit-ethnicity"),
+            ("", "/participants/{uuid}/edit-ethnicity"),
+            (
+                "/return/path/",
+                "/participants/{uuid}/edit-ethnicity?return_url=/return/path/",
+            ),
+        ],
+    )
+    def test_ethnicity_url(self, participant, return_url, expected_url):
+        presenter = ParticipantPresenter(participant)
+        expected = expected_url.replace("{uuid}", str(participant.pk))
+
+        result = presenter.ethnicity_url(return_url)
+
+        assert result == expected
 
 
 class TestParticipantAppointmentPresenter:

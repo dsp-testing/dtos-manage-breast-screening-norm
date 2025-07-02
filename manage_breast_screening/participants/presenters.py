@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from urllib.parse import quote
 
 from django.urls import reverse
 
@@ -37,8 +38,9 @@ class ParticipantPresenter:
     def __init__(self, participant):
         self._participant = participant
 
+        self.id = participant.pk
         self.extra_needs = participant.extra_needs
-        self.ethnic_group = participant.ethnic_group
+        self.ethnic_category = participant.ethnic_category
         self.full_name = participant.full_name
         self.gender = participant.gender
         self.email = participant.email
@@ -47,15 +49,15 @@ class ParticipantPresenter:
         self.date_of_birth = format_date(participant.date_of_birth)
         self.age = format_age(participant.age())
         self.risk_level = sentence_case(participant.risk_level)
-        self.url = reverse("participants:show", kwargs={"pk": participant.pk})
+        self.url = reverse("participants:show", kwargs={"id": participant.pk})
 
-    @property
-    def ethnic_group_category(self):
-        category = self._participant.ethnic_group_category()
-        if category:
-            return category.replace("Any other", "any other")
-        else:
-            return None
+    def ethnicity_url(self, return_url):
+        url = reverse(
+            "participants:edit_ethnicity", kwargs={"id": self._participant.pk}
+        )
+        if return_url:
+            url += "?return_url=" + quote(return_url)
+        return url
 
     @property
     def address(self):
@@ -64,6 +66,15 @@ class ParticipantPresenter:
             return {}
 
         return {"lines": address.lines, "postcode": address.postcode}
+
+    @property
+    def ethnic_background(self):
+        background = self._participant.ethnic_background
+
+        if background and background.startswith("Any other"):
+            return background[0].lower() + background[1:]
+
+        return background
 
 
 class ScreeningHistoryPresenter:
