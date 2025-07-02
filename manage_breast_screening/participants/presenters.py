@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from urllib.parse import quote
 
 from django.urls import reverse
 
@@ -55,7 +56,7 @@ class ParticipantPresenter:
             "participants:edit_ethnicity", kwargs={"id": self._participant.pk}
         )
         if return_url:
-            url += "?return_url=" + return_url
+            url += "?return_url=" + quote(return_url)
         return url
 
     @property
