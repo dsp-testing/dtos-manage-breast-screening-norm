@@ -3,14 +3,16 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     groups:
-      patterns: ['nhsuk-frontend']
+      frontend:
+        patterns: ['nhsuk-frontend']
     schedule:
       interval: weekly
 
   - package-ecosystem: 'pip'
     directory: '/'
     groups:
-      patterns: ['nhsuk-frontend-jinja']
+      frontendpip:
+        patterns: ['nhsuk-frontend-jinja']
     schedule:
       interval: weekly
 
