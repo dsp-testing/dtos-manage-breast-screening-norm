@@ -23,7 +23,7 @@
     "nhsuk-frontend": "^9.6.2"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-env": "^7.28.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
@@ -54,7 +54,7 @@
     "jest-environment-jsdom": "^30.0.2",
     "jsdom": "^26.1.0",
     "prettier": "^3.5.3",
-    "rollup": "^4.44.1",
+    "rollup": "^4.44.2",
     "sass-embedded": "^1.89.2",
     "typescript": "^5.8.3"
   },
