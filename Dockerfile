@@ -2,7 +2,7 @@ ARG poetry_version=2.1.2
 
 #### NODE.JS BUILD
 
-FROM node:24.2.0-alpine3.21@sha256:84d000da129e2e2ea545ad9779845a7e457b1472ba01225513a8ed1a222df7dd AS node_builder
+FROM node:25.2.0-alpine3.21@sha256:fabc70f280a2929c4644df04697cdc31cee87615087df3a329bd0e003b0c1d2c AS node_builder
 
 WORKDIR /app
 
